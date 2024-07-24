@@ -10,10 +10,10 @@ public:
         Serial.begin(115200);
         Wire.begin();
 
-        lcd.init();
-        lcd.backlight();
-        lcd.setCursor(0, 0);
-        lcd.print(F("LCD I2C Ready!"));
+        lcd->init();
+        lcd->backlight();
+        lcd->setCursor(0, 0);
+        lcd->print(F("LCD I2C Ready!"));
 
         if (!rtc.begin()) {
             Serial.println(F("Couldn't find RTC"));
@@ -34,27 +34,27 @@ public:
             DateTime now = rtc.now();
 
             // Time
-            lcd.setCursor(0, 0);
-            lcd.print(F("Time: "));
-            lcd.print(now.hour());
-            lcd.print(F(":"));
-            lcd.print(now.minute());
-            lcd.print(F(":"));
-            lcd.print(now.second());
+            lcd->setCursor(0, 0);
+            lcd->print(F("Time: "));
+            lcd->print(now.hour());
+            lcd->print(F(":"));
+            lcd->print(now.minute());
+            lcd->print(F(":"));
+            lcd->print(now.second());
 
             // Date
-            lcd.setCursor(0, 1);
-            lcd.print(F("Date: "));
-            lcd.print(now.day());
-            lcd.print(F("/"));
-            lcd.print(now.month());
-            lcd.print("/");
-            lcd.print(now.year());
+            lcd->setCursor(0, 1);
+            lcd->print(F("Date: "));
+            lcd->print(now.day());
+            lcd->print(F("/"));
+            lcd->print(now.month());
+            lcd->print("/");
+            lcd->print(now.year());
         }
     }
 
 private:
     unsigned long lastTime = 0;
-    LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 16, 2);
+    LiquidCrystal_I2C* lcd = new LiquidCrystal_I2C(0x27, 16, 2);
     RTC_DS3231 rtc;
 };
