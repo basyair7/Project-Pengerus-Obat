@@ -9,7 +9,7 @@ param (
 
 # Use the BOARDTYPE variable to run the pio command with or without the specified port
 if ($port) {
-    Invoke-Expression "pio run -e $BOARDTYPE -t upload --upload-port $port"
+    Invoke-Expression "pio run -e $BOARDTYPE -t erase --upload-port $port"
 } else {
-    Invoke-Expression "pio run -e $BOARDTYPE -t upload"
+    Invoke-Expression "pio run -e $BOARDTYPE -t erase"
 }

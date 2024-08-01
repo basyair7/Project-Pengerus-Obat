@@ -1,12 +1,13 @@
 import os, json, shutil
+from SCons.Script import DefaultEnvironment
 
 class Move:
     def __init__(self) -> None:
-        self.build_dir = ".pio/build/megaatmega2560"
-        self.output_firmware = "firmware.hex"
+        self.build_dir = ".pio/build/esp32doit-devkit-v1"
+        self.output_firmware = "firmware.bin"
         self.output_spiffs = "spiffs.bin"
-        self.dest_path = "firmware"
-        self.child_dir = "megaatmega2560"
+        self.dest_path = "../../firmware"
+        self.child_dir = "esp32doit-devkit-v1"
 
     def __move_file__(self, src: str, dest: str):
         try:
@@ -36,12 +37,12 @@ class Move:
             print(f"Firmware file not found: {firmware_src}")
 
         if new_firmware_name and os.path.exists(spiffs_src):
-            spiffs_dest = os.path.exists(spiffs_src)
+            spiffs_dest = os.path.join(dest_dir, new_spiffs_name)
             self.__move_file__(spiffs_src, spiffs_dest)
         elif new_spiffs_name:
             print(f"SPIFFS file not found: {spiffs_src}")
 
-def main():
+def main(source, target, env):
     # Open and read the configuration file
     with open('build.config.json', 'r') as f:
         config = json.load(f)
@@ -53,10 +54,12 @@ def main():
     typefile_2 = config["typefile-2"]
 
     out_file_firmware = f"{data_name}-v{data_version}-{data_revision}-{typefile_1}.bin"
-    # out_file_spiffs = f"{data_name}-v{data_version}-{data_revision}-{typefile_2}.bin"
+    out_file_spiffs = f"{data_name}-v{data_version}-{data_revision}-{typefile_2}.bin"
 
     # Process files
     move_file = Move();
-    move_file.process_file(out_file_firmware)
+    move_file.process_file(out_file_firmware, out_file_spiffs)
 
-main()
+env = DefaultEnvironment()
+env.AddPostAction("$BUILD_DIR/${PROGNAME}.bin", main)
+env.AddPostAction("$BUILD_DIR/spiffs.bin", main)

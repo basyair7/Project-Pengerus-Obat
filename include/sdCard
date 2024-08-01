@@ -1,0 +1,21 @@
+#ifndef SDCARD_HPP
+#define SDCARD_HPP
+
+#include <Arduino.h>
+#include <SD.h>
+#include <SPI.h>
+
+class SDCard {
+public:
+    void SDCardInit();
+
+private:
+    void initializeConfig();
+
+
+    
+private:
+    File file;
+};
+
+#endif

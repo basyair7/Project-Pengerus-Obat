@@ -1,0 +1,24 @@
+#ifndef DS3231RTC_HPP
+#define DS3231RTC_HPP
+
+#include <Arduino.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <RTClib.h>
+
+class DS3231rtc {
+public:
+    void begin(String *status);
+    void autoAdjust(bool enable);
+    void date(uint8_t *day, uint8_t *month, uint8_t *year);
+    void time(uint8_t *hour, uint8_t *minute, uint8_t *second);
+    String datestr();
+    String timestr();
+
+private:
+    RTC_DS3231 _rtc;
+    DateTime now;
+};
+
+
+#endif
