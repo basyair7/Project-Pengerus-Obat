@@ -58,13 +58,12 @@ private:
         rtc.autoAdjust(true);
         lcd.init();
 
-        ThisRTOS* p = new ThisRTOS;
         xTaskCreate([](void* param) {
             static_cast<ThisRTOS*>(param)->program1(param);
-        }, "program1", 1500, p, 1, NULL);
+        }, "program1", 1500, this, 1, NULL);
         xTaskCreate([](void* param) {
             static_cast<ThisRTOS*>(param)->program2(param);
-        }, "program2", 1500, p, 1, NULL);
+        }, "program2", 1500, this, 2, NULL);
 
         vTaskStartScheduler();
     }
