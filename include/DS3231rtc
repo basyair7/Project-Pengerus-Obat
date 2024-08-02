@@ -8,10 +8,10 @@
 
 class DS3231rtc {
 public:
-    void begin(String *status);
+    void begin(String* status);
     void autoAdjust(bool enable);
-    void date(uint8_t *day, uint8_t *month, uint8_t *year);
-    void time(uint8_t *hour, uint8_t *minute, uint8_t *second);
+    void date(uint8_t* day, uint8_t* month, uint8_t* year);
+    void time(uint8_t* hour, uint8_t* minute, uint8_t* second);
     String datestr();
     String timestr();
 

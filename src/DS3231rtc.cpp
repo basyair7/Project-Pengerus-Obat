@@ -1,6 +1,6 @@
 #include <DS3231rtc>
 
-void DS3231rtc::begin(String *status) {
+void DS3231rtc::begin(String* status) {
     String _status;
     if (!_rtc.begin()) {
         _status = "Status: Couldn't find RTC";
@@ -22,7 +22,7 @@ void DS3231rtc::autoAdjust(bool enable) {
     }
 }
 
-void DS3231rtc::date(uint8_t *day, uint8_t *month, uint8_t *year) {
+void DS3231rtc::date(uint8_t* day, uint8_t* month, uint8_t* year) {
     now = _rtc.now();
     
     if (day != nullptr)   *day    = now.day();
@@ -30,7 +30,7 @@ void DS3231rtc::date(uint8_t *day, uint8_t *month, uint8_t *year) {
     if (year != nullptr)  *year   = now.year();
 }
 
-void DS3231rtc::time(uint8_t *hour, uint8_t *minute, uint8_t *second) {
+void DS3231rtc::time(uint8_t* hour, uint8_t* minute, uint8_t* second) {
     now = _rtc.now();
 
     if (hour != nullptr)   *hour   = now.hour();

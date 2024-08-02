@@ -2,20 +2,33 @@
 #define SDCARD_HPP
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
 #include <SD.h>
 #include <SPI.h>
+#include "LCDdisplay"
+#include "TypeSerial"
 
-class SDCard {
+class SDCard : public LCDdisplay {
 public:
     void SDCardInit();
+
+public:
+    void addConfig(const String& configName, const int id, const int minute, const int speed);
+    void readConfig(const String& configName, int* id, int* minute, int* speed);
+    void removeConfig(const String& configName);
 
 private:
     void initializeConfig();
 
-
+private:
+    String _read(String cfile);
+    void _write(String cfile, String valJson);
+    bool _remove(String cfile);
     
 private:
     File file;
+    const char* fileConfig  = "config.json";
+    const char* fileHistory = "history.txt";
 };
 
 #endif
