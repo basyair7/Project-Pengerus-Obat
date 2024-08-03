@@ -4,6 +4,8 @@
         "TypeSerial": "cpp",
         "LCDdisplay": "cpp",
         "sdCard": "cpp",
-        "DS3231rtc": "cpp"
+        "DS3231rtc": "cpp",
+        "handlemotors": "cpp",
+        "info": "cpp"
     }
 }

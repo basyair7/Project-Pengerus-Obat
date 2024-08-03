@@ -1,25 +1,19 @@
 #include <DS3231rtc>
 
-void DS3231rtc::begin(String* status) {
-    String _status;
+void DS3231rtc::begin() {
     if (!_rtc.begin()) {
-        _status = "Status: Couldn't find RTC";
+        TSprintln("Status: Couldn't find RTC");
         while(1);
     }
 
     if (_rtc.lostPower()) {
-        _status = "RTC Lost power, setting the time!";
+        TSprintln(F("RTC Lost power, setting the time!"));
         _rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     }
-
-    if (status != nullptr) 
-        *status = _status;
 }
 
-void DS3231rtc::autoAdjust(bool enable) {
-    if (enable) {
-        _rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    }
+void DS3231rtc::autoAdjust() {
+    _rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 void DS3231rtc::date(uint8_t* day, uint8_t* month, uint8_t* year) {
@@ -46,4 +40,15 @@ String DS3231rtc::datestr() {
 String DS3231rtc::timestr() {
     now = _rtc.now();
     return String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
+}
+
+DateTime DS3231rtc::rtcNow() {
+    DateTime now = _rtc.now();
+    return now;
+}
+
+String DS3231rtc::estimateFinishTime(int durationInSeconds) {
+    DateTime now = _rtc.now();
+    DateTime finishTime = now + TimeSpan(durationInSeconds); // Convert to milliseconds
+    return finishTime.toString("hh:mm:ss");
 }

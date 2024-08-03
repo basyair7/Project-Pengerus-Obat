@@ -3,20 +3,23 @@
 
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
-// #include <LiquidCrystal_animated.h>
-#include "variable.h"
 
-class LCDdisplay : protected VariableMillis {
+class LCDdisplay {
 public:
+    // LCDの初期化
     void init();
+    // LCDのクリア
     void clear();
+    // バックライトのオン/オフ
+    void backlight(bool x);
+    // 文字列の表示
     void print(const String& x, const uint8_t col, const uint8_t row);
-    // void printAnimated(const String& x, const uint8_t col, const uint8_t row);
+
+public:
+    int cols = 16, rows = 2;
 
 private:
-    LiquidCrystal_I2C* lcd = new LiquidCrystal_I2C(0x27, 16, 2);
-    // LiquidCrystal_animated* animated = new LiquidCrystal_animated;
-
+    LiquidCrystal_I2C* lcd = new LiquidCrystal_I2C(0x27, cols, rows);
 };
 
 #endif

@@ -3,43 +3,27 @@
 #include <TypeSerial>
 #include <LCDdisplay>
 #include <DS3231rtc>
-#include <Arduino_FreeRTOS.h>
-#include <task.h>
+#include <SDCard>
+
+#include <info>
+#include <menu.hpp>
+#include <standby.hpp>
+#include <handleMotors>
+
+LCDdisplay* lcd = new LCDdisplay;
+DS3231rtc rtc;
+SDCard* sdcard = new SDCard;
+
+StandByProgram standby;
+HandleMotors handleMotors;
+Menu menu;
+Info info;
+byte num_menu;
 
 class ProgramMain {
 public:
-    void program1(void *pvParameter) {
-        (void) pvParameter;
-        LCDdisplay* lcd = static_cast<LCDdisplay*>(pvParameter);
-        DS3231rtc* rtc = static_cast<DS3231rtc*>(pvParameter);
-        while (true) {
-            lcd->print("Date:" + rtc->datestr(), 0, 0);
-            lcd->print("Time:" + rtc->timestr(), 1, 0);
-            vTaskDelay(pdMS_TO_TICKS(1000));
-            lcd->clear();
-        }
-    }
-
-    void program2(void *pvParameter) {
-        (void) pvParameter;
-        pinMode(LED_BUILTIN, OUTPUT);
-
-        while(true) {
-            digitalWrite(LED_BUILTIN, HIGH);
-            vTaskDelay(pdMS_TO_TICKS(500));
-            digitalWrite(LED_BUILTIN, LOW);
-            vTaskDelay(pdMS_TO_TICKS(500));
-        }
-    }
-};
-
-class ThisRTOS : public ProgramMain {
-public:
-    LCDdisplay lcd;
-    DS3231rtc rtc;
-
-    static ThisRTOS& instance() {
-        static ThisRTOS instance;
+    static ProgramMain& instance() {
+        static ProgramMain instance;
         return instance;
     }
 
@@ -54,24 +38,30 @@ public:
 private:
     void _setup() {
         TSbegin(115200);
-        rtc.begin(nullptr);
-        rtc.autoAdjust(true);
-        lcd.init();
-
-        xTaskCreate([](void* param) {
-            static_cast<ThisRTOS*>(param)->program1(param);
-        }, "program1", 1500, this, 1, NULL);
-        xTaskCreate([](void* param) {
-            static_cast<ThisRTOS*>(param)->program2(param);
-        }, "program2", 1500, this, 2, NULL);
-
-        vTaskStartScheduler();
+        rtc.begin();
+        // rtc.autoAdjust();
+        lcd->init();
+        // sdcard->SDCardInit();
+        menu.menu();
     }
 
     void _loop() {
-        // TODO("Not yet implemented");
+        if (num_menu == 1) {
+            handleMotors.run();
+            menu.menu();
+        }
+        if (num_menu == 2) {
+            info.run();
+            menu.menu();
+        }
+        
+        if (num_menu == 3) {
+            standby.run();
+        }
+
+        menu.switchToMenu();
     }
 };
 
-void setup() { ThisRTOS::setup(); }
-void loop() { ThisRTOS::loop(); }
+void setup() { ProgramMain::setup(); }
+void loop() { ProgramMain::loop(); }

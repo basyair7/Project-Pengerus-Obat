@@ -1,0 +1,35 @@
+#ifndef HANDLEMOTORS_HPP
+
+#include <Arduino.h>
+#include <RTClib.h>
+#include "motor.hpp"
+#include "variable.h"
+#include "Keypad.h"
+#include "menu.hpp"
+
+class HandleMotors : protected VariableMillis {
+public:
+    void run();
+
+private:
+    bool init();
+    bool insertSpeedMotors();
+    bool insertDurations();
+
+private:
+    Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+    DriverMotor driver;
+    uint8_t sizeListSpeed = 3;
+    int list_speed_motors[3] = { 50, 75, 100 };
+    const String key_lable[3] = { "slow", "normal", "fast" };
+    const char key_map[3] = { '1', '2', '3' };
+
+private:
+    int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0;
+    int durations = 0;
+    bool ready = false;
+    RTC_DS3231 _rtc;
+    Menu _menu;
+};
+
+#endif

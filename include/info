@@ -1,0 +1,56 @@
+#ifndef INFO_HPP
+#define INFO_HPP
+
+#include <Arduino.h>
+#include <Keypad.h>
+#include "main.h"
+#include "variable.h"
+
+// class information firmware and board
+class Info : protected VariableMillis {
+public:
+    void run() {
+        while (true) {
+            char key = _key.getKey();
+            if (key == 'B') {
+                break;
+            }
+
+            if((unsigned long) (millis() - LastMillis1) >= 1000) {
+                LastMillis1 = millis();
+                stateinfo++;
+                if(stateinfo >= 3) stateinfo = 0;
+            }
+
+            if((unsigned long) (millis() - LastMillis2) >= 500) {
+                if(stateinfo == 0) {
+                    lcd->clear();
+                    lcd->print("Information", 2, 0);
+                    lcd->print("Firmware: " + firmwareVer, 0, 1);
+                }
+                else if(stateinfo == 1) {
+                    lcd->clear();
+                    lcd->print("Build: " + buildDate, 0, 1);
+                }
+                else if(stateinfo == 2) {
+                    lcd->clear();
+                    lcd->print("Information", 2, 0);
+                    lcd->print("Board:" + boardChipset, 0, 1);
+                }
+            
+                LastMillis2 = millis();
+            }
+        }
+    }
+
+private:
+    const String boardChipset  = "atmega2560";
+    const String firmwareVer   = "V1.0.0";
+    const String buildDate     = "8/2/2024";
+    uint8_t stateinfo = 0;
+
+private:
+    Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+};
+
+#endif

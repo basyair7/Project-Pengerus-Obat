@@ -24,6 +24,8 @@ public:
             Serial.println(F("RTC Lost power, setting the time!"));
             rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
         }
+
+        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     }
 
     void loop() {

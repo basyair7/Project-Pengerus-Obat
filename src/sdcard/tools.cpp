@@ -1,4 +1,5 @@
 #include <SDCard>
+#include <main.h>
 
 String SDCard::_read(String cfile) {
     String val;
@@ -14,7 +15,7 @@ String SDCard::_read(String cfile) {
         file.close();
     }
     else {
-        TSprintln(F("Failed to open file to writing"));
+        lcd->print("Failed to open file to writing", 0, 0);
         val = "null";
     }
 
@@ -28,7 +29,7 @@ void SDCard::_write(String cfile, String valJson) {
         file.close();
     }
     else {
-        TSprintln(F("Failed to create a new file"));
+        lcd->print("Failed to create a new file", 0, 0);
         TSprintln(cfile);
         return;
     }

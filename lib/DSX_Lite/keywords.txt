@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map For DSXLite
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+DSX_pinMotor KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+pinMotors KEYWORD2
+
+#######################################
+# Constans (LITERAL1)
+#######################################
+
+forward LITERAL1
+backward LITERAL1
+turnLeft LITERAL1
+turnRight LITERAL1
+stops LITERAL1

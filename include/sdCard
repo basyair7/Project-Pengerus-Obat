@@ -5,17 +5,17 @@
 #include <ArduinoJson.h>
 #include <SD.h>
 #include <SPI.h>
-#include "LCDdisplay"
 #include "TypeSerial"
 
-class SDCard : public LCDdisplay {
+class SDCard {
 public:
     void SDCardInit();
 
 public:
-    void addConfig(const String& configName, const int id, const int minute, const int speed);
+    void addConfig(const String& configName, int id, int minute, int speed);
     void readConfig(const String& configName, int* id, int* minute, int* speed);
     void removeConfig(const String& configName);
+    void writeReport(String date, String time, String finishTime, String speed, int _speed_pwm);
 
 private:
     void initializeConfig();
@@ -28,7 +28,7 @@ private:
 private:
     File file;
     const char* fileConfig  = "config.json";
-    const char* fileHistory = "history.txt";
+    const char* fileReport = "report.txt";
 };
 
 #endif
