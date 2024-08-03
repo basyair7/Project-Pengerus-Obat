@@ -1,22 +1,22 @@
 #include <handleMotors>
 #include <main.h>
 
-
+// スピード入力関数
 bool HandleMotors::insertSpeedMotors() {
     bool x;
     lcd->clear();
-    lcd->print("Insert speed: ", 0, 0);
-    lcd->print(key_lable[speedSelect], 0, 1);
+    lcd->print("Insert speed: ", 0, 0); // スピード入力の表示
+    lcd->print(key_lable[speedSelect], 0, 1); // 現在のスピード表示
     while (true) {
         char _key = keypad.getKey();
         if (_key) {
             lcd->clear();
-            lcd->print("Insert speed: ", 0, 0);
+            lcd->print("Insert speed: ", 0, 0); // スピード入力の再表示
 
             if (_key == 'A' && _speed_motors != 0) {
                 lcd->clear();
-                pwmSpeed = map(_speed_motors, 50, 100, 128, 255);
-                driver.setSpeedPWM(pwmSpeed);
+                pwmSpeed = map(_speed_motors, 50, 100, 128, 255); // スピードをPWMにマッピング
+                driver.setSpeedPWM(pwmSpeed); // モーターのスピード設定
                 x = true;
                 break;
             }
@@ -31,7 +31,7 @@ bool HandleMotors::insertSpeedMotors() {
                 if (_key == key_map[i]) {
                     speedSelect = i;
                     _speed_motors = list_speed_motors[i];
-                    lcd->print(key_lable[speedSelect], 0, 1);
+                    lcd->print(key_lable[speedSelect], 0, 1); // 新しいスピード表示
                     validKey = true;
                 }
             }
@@ -39,7 +39,7 @@ bool HandleMotors::insertSpeedMotors() {
             if (!validKey) {
                 speedSelect = 1;
                 _speed_motors = list_speed_motors[1];
-                lcd->print(key_lable[speedSelect], 0, 1);
+                lcd->print(key_lable[speedSelect], 0, 1); // デフォルトのスピード表示
             }
         }
     }
@@ -47,30 +47,31 @@ bool HandleMotors::insertSpeedMotors() {
     return x;
 }
 
+// 継続時間入力関数
 bool HandleMotors::insertDurations() {
     bool x;
     lcd->clear();
-    lcd->print("Insert duration: ", 0, 0);
-    String inputDuration = ""; // Menyimpan input dari pengguna
+    lcd->print("Insert duration: ", 0, 0); // 継続時間入力の表示
+    String inputDuration = ""; // ユーザー入力を保存
 
     while (true) {
         char _key = keypad.getKey();
         if (_key) {
-            if (_key == 'A') { // Tombol konfirmasi
-                if (inputDuration.length() > 0) { // Pastikan input tidak kosong
-                    durations = inputDuration.toInt(); // Konversi string ke integer
+            if (_key == 'A') { // 確認ボタン
+                if (inputDuration.length() > 0) { // 入力が空でないことを確認
+                    durations = inputDuration.toInt(); // 文字列を整数に変換
                     x = true;
                     break;
                 }
-            } else if (_key == 'D') { // Tombol untuk menghapus input
-                inputDuration = ""; // Hapus input jika tombol '*' ditekan
+            } else if (_key == 'D') { // 入力を削除するボタン
+                inputDuration = ""; // 入力を削除
                 lcd->clear();
-                lcd->print("Insert duration: ", 0, 0);
+                lcd->print("Insert duration: ", 0, 0); // 再表示
             } else if (isDigit(_key)) {
-                inputDuration += _key; // Tambahkan digit ke input
+                inputDuration += _key; // 数字を入力に追加
                 lcd->clear();
-                lcd->print("Insert duration: ", 0, 0);
-                lcd->print(inputDuration + " s", 0, 1); // Tampilkan input saat ini
+                lcd->print("Insert duration: ", 0, 0); // 再表示
+                lcd->print(inputDuration + " s", 0, 1); // 現在の入力を表示
             }
             else if (_key == 'B') {
                 x = false;
@@ -82,12 +83,13 @@ bool HandleMotors::insertDurations() {
     return x;
 }
 
+// 初期化関数
 bool HandleMotors::init() {
     bool p1, p2;
-    driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D);
-    _rtc.begin();
-    p1 = this->insertSpeedMotors();
-    p1 ? p2 = this->insertDurations() : p2 = false;
+    driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D); // モーターの初期化
+    _rtc.begin(); // RTCの初期化
+    p1 = this->insertSpeedMotors(); // スピード入力
+    p1 ? p2 = this->insertDurations() : p2 = false; // 継続時間入力
 
     if (p1 && p2) {
         return true;
@@ -97,30 +99,31 @@ bool HandleMotors::init() {
     }
 }
 
+// メインの実行関数
 void HandleMotors::run() {
-    ready = init();
+    ready = init(); // 初期化
 
     if (ready) {
         DateTime startTime = _rtc.now();
-        DateTime finishTime = startTime + TimeSpan(durations); // Add duration in seconds
-        String formatFinishTime = finishTime.toString("hh:mm:ss"); // Format finish time
+        DateTime finishTime = startTime + TimeSpan(durations); // 継続時間を追加
+        String formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻をフォーマット
         String finishTimeStr;
         bool stop_program = false;
         int state = 0;
 
-        driver.run_forward(0); // Motor runs continuously
+        driver.run_forward(0); // モーターを連続的に動かす
 
         while (true) {
             unsigned long currentMillis = millis();
             DateTime currentTime = _rtc.now();
-            unsigned long remainingSecs = finishTime.unixtime() - currentTime.unixtime(); // Calculate remaining time in seconds
+            unsigned long remainingSecs = finishTime.unixtime() - currentTime.unixtime(); // 残り時間を秒で計算
 
             if ((unsigned long) (currentMillis - LastMillis1) >= 1000) {
                 LastMillis1 = currentMillis;
 
                 lcd->clear();
                 if (state <= 3) {
-                    // Display countdown timer
+                    // カウントダウンタイマーの表示
                     if (remainingSecs > 0) {
                         lcd->print("Remaining time: ", 0, 0);
                         int minutes = remainingSecs / 60;
@@ -134,11 +137,11 @@ void HandleMotors::run() {
                 if (state >= 4 && state <= 7) {
                     String lblSpeed = key_lable[speedSelect] + " (" + String(pwmSpeed) + " PWM)";
                     lcd->print("Speed Motor: ", 0, 0);
-                    lcd->print(lblSpeed, 0, 1);
+                    lcd->print(lblSpeed, 0, 1); // スピード表示
                 }
 
                 if (state >= 8) {
-                    // Display finish time
+                    // 終了時刻の表示
                     lcd->clear();
                     lcd->print("Finish at: ", 0, 0);
                     lcd->print(formatFinishTime, 0, 1);
@@ -149,12 +152,12 @@ void HandleMotors::run() {
                 state++;
             }
 
-            // Check if time has elapsed
+            // 時間が経過したかどうかを確認
             if (remainingSecs <= 0) {
-                break; // Exit loop if duration has ended
+                break; // 継続時間が終了した場合、ループを終了
             }
 
-            // Check keypad input
+            // キーパッド入力の確認
             char key = keypad.getKey();
             if (key == 'B') {
                 lcd->clear();
@@ -167,42 +170,42 @@ void HandleMotors::run() {
                         driver.stops();
                         lcd->clear();
                         lcd->print("Stopped.", 0, 0);
-                        delay(2000); // Display message for 2 seconds
+                        delay(2000); // メッセージを2秒間表示
                         stop_program = true;
                         finishTimeStr = formatFinishTime + " (" + String(durations) + " seconds)\n";
                         finishTimeStr += "Remaining time\t: " + String(remainingSecs) + " seconds\n";
                         finishTimeStr += "Status\t: Stopped.";
-                        break; // Exit run() function if stopped
+                        break; // プログラムを停止した場合、run()関数を終了
                     }
                     else if (confirmKey == 'C') {
                         lcd->clear();
                         lcd->print("Resuming...", 0, 0);
-                        delay(2000); // Display message for 2 seconds
-                        break; // Return to main loop
+                        delay(2000); // メッセージを2秒間表示
+                        break; // メインループに戻る
                     }
                 }
             }
 
             if (stop_program) break;
-            delay(100); // Reduce CPU load
+            delay(100); // CPU負荷を減らすために待機
         }
 
-        driver.stops();
+        driver.stops(); // モーター停止
 
         lcd->clear();
         lcd->print("Done... ", 0, 0);
         delay(2000);
         lcd->print(formatFinishTime + "(" + String(durations) + "s)", 0, 0);
-        lcd->print("Speed: " + key_lable[speedSelect], 0, 1);
+        lcd->print("Speed: " + key_lable[speedSelect], 0, 1); // 結果表示
 
-        // save reporting
+        // レポートを保存
         if (!stop_program) {
             finishTimeStr = formatFinishTime + " (" + String(durations) + " seconds)\n";
             finishTimeStr += "Status\t: Done.";
         }
         // sdcard->writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], pwmSpeed);
         TSprintln(finishTimeStr);
-        delay(5000); // Display results for 5 seconds
+        delay(5000); // 結果を5秒間表示
 
         _speed_motors = 0;
         speedSelect = 0;

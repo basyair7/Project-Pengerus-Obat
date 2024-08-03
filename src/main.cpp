@@ -10,6 +10,7 @@
 #include <standby.hpp>
 #include <handleMotors>
 
+// グローバルオブジェクトの初期化
 LCDdisplay* lcd = new LCDdisplay;
 DS3231rtc rtc;
 SDCard* sdcard = new SDCard;
@@ -20,48 +21,54 @@ Menu menu;
 Info info;
 byte num_menu;
 
+// メインプログラムクラス
 class ProgramMain {
 public:
+    // インスタンスの取得
     static ProgramMain& instance() {
         static ProgramMain instance;
         return instance;
     }
 
+    // セットアップ関数
     static void setup(void) {
         instance()._setup();
     }
 
+    // ループ関数
     static void loop(void) {
         instance()._loop();
     }
 
 private:
+    // プライベートセットアップ関数
     void _setup() {
-        TSbegin(115200);
-        rtc.begin();
-        // rtc.autoAdjust();
-        lcd->init();
-        // sdcard->SDCardInit();
-        menu.menu();
+        TSbegin(115200);  // シリアル通信の初期化
+        rtc.begin();      // RTCの初期化
+        // rtc.autoAdjust(); // RTCの自動調整
+        lcd->init();      // LCDの初期化
+        // sdcard->SDCardInit(); // SDカードの初期化
+        menu.menu();      // メニューの初期化
     }
 
+    // プライベートループ関数
     void _loop() {
         if (num_menu == 1) {
-            handleMotors.run();
-            menu.menu();
+            handleMotors.run();  // モーターのハンドル実行
+            menu.menu();         // メニューの再表示
         }
         if (num_menu == 2) {
-            info.run();
-            menu.menu();
+            info.run();  // 情報表示の実行
+            menu.menu(); // メニューの再表示
         }
         
         if (num_menu == 3) {
-            standby.run();
+            standby.run(); // スタンバイモードの実行
         }
 
-        menu.switchToMenu();
+        menu.switchToMenu(); // メニューへの切り替え
     }
 };
 
-void setup() { ProgramMain::setup(); }
-void loop() { ProgramMain::loop(); }
+void setup() { /*Arduinoのループ関数*/ ProgramMain::setup(); }
+void loop() { /*Arduinoのセットアップ関数*/ ProgramMain::loop(); }

@@ -7,29 +7,30 @@
 #include "Keypad.h"
 #include "menu.hpp"
 
+// HandleMotorsクラスの定義
 class HandleMotors : protected VariableMillis {
 public:
-    void run();
+    void run(); // メインの実行関数
 
 private:
-    bool init();
-    bool insertSpeedMotors();
-    bool insertDurations();
+    bool init(); // 初期化関数
+    bool insertSpeedMotors(); // スピード入力関数
+    bool insertDurations(); // 時間入力関数
 
 private:
-    Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
-    DriverMotor driver;
-    uint8_t sizeListSpeed = 3;
-    int list_speed_motors[3] = { 50, 75, 100 };
-    const String key_lable[3] = { "slow", "normal", "fast" };
-    const char key_map[3] = { '1', '2', '3' };
+    Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッド
+    DriverMotor driver; // モータードライバ
+    uint8_t sizeListSpeed = 3; // スピードリストのサイズ
+    int list_speed_motors[3] = { 50, 75, 100 }; // スピードリスト
+    const String key_lable[3] = { "slow", "normal", "fast" }; // スピードのラベル
+    const char key_map[3] = { '1', '2', '3' }; // キーマップ
 
 private:
-    int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0;
-    int durations = 0;
-    bool ready = false;
-    RTC_DS3231 _rtc;
-    Menu _menu;
+    int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0; // スピード関連の変数
+    int durations = 0; // 継続時間
+    bool ready = false; // 準備完了フラグ
+    RTC_DS3231 _rtc; // RTCオブジェクト
+    Menu _menu; // メニューオブジェクト
 };
 
 #endif

@@ -7,21 +7,21 @@
 #include <RTClib.h>
 #include "TypeSerial"
 
+// DS3231rtcクラスの定義
 class DS3231rtc {
 public:
-    void begin();
-    void autoAdjust();
-    void date(uint8_t* day, uint8_t* month, uint8_t* year);
-    void time(uint8_t* hour, uint8_t* minute, uint8_t* second);
-    String datestr();
-    String timestr();
-    String estimateFinishTime(int durationInSeconds);
-    DateTime rtcNow();
+    void begin(); // RTCの初期化
+    void autoAdjust(); // 時刻の自動調整
+    void date(uint8_t* day, uint8_t* month, uint8_t* year); // 日付を取得
+    void time(uint8_t* hour, uint8_t* minute, uint8_t* second); // 時刻を取得
+    String datestr(); // 日付を文字列で取得
+    String timestr(); // 時刻を文字列で取得
+    String estimateFinishTime(int durationInSeconds); // 終了予定時刻を計算
+    DateTime rtcNow(); // 現在のDateTimeを取得
 
 private:
-    RTC_DS3231 _rtc;
-    DateTime now;
+    RTC_DS3231 _rtc; // RTCオブジェクト
+    DateTime now; // 現在の時刻
 };
-
 
 #endif

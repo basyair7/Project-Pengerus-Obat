@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 
+// 定義と定数
 #define pinCS 53
 
 #define PIN_MOTOR_A 24
@@ -10,8 +11,11 @@
 #define PIN_MOTOR_C 26
 #define PIN_MOTOR_D 27
 
+// キーパッドの行と列の数
 static const byte ROWS = 4;
 static const byte COLS = 4;
+
+// キーマップの定義
 inline char keys[ROWS][COLS] = {
     {'1', '4', '7', '*'},
     {'2', '5', '8', '0'},
@@ -19,13 +23,15 @@ inline char keys[ROWS][COLS] = {
     {'A', 'B', 'C', 'D'}
 };
 
+// キーパッドのピンの定義
 inline byte rowPins[ROWS] = {9, 8, 7, 6};
 inline byte colPins[COLS] = {5, 4, 3, 2};
 
+// ミリ秒管理クラス
 class VariableMillis {
 public:
-    unsigned long LastMillis1;
-    unsigned long LastMillis2;
+    unsigned long LastMillis1; // 最後のミリ秒1
+    unsigned long LastMillis2; // 最後のミリ秒2
 };
 
 #endif
