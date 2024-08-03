@@ -3,11 +3,11 @@ from SCons.Script import DefaultEnvironment
 
 class Move:
     def __init__(self) -> None:
-        self.build_dir = ".pio/build/esp32doit-devkit-v1"
-        self.output_firmware = "firmware.bin"
+        self.build_dir = ".pio/build/megaatmega2560"
+        self.output_firmware = "firmware.hex"
         self.output_spiffs = "spiffs.bin"
-        self.dest_path = "../../firmware"
-        self.child_dir = "esp32doit-devkit-v1"
+        self.dest_path = "firmware"
+        self.child_dir = "megaatmega2560"
 
     def __move_file__(self, src: str, dest: str):
         try:
@@ -53,13 +53,12 @@ def main(source, target, env):
     typefile_1 = config["typefile-1"]
     typefile_2 = config["typefile-2"]
 
-    out_file_firmware = f"{data_name}-v{data_version}-{data_revision}-{typefile_1}.bin"
-    out_file_spiffs = f"{data_name}-v{data_version}-{data_revision}-{typefile_2}.bin"
+    out_file_firmware = f"{data_name}-v{data_version}-{data_revision}-{typefile_1}.hex"
 
     # Process files
     move_file = Move();
-    move_file.process_file(out_file_firmware, out_file_spiffs)
+    move_file.process_file(out_file_firmware)
 
 env = DefaultEnvironment()
-env.AddPostAction("$BUILD_DIR/${PROGNAME}.bin", main)
-env.AddPostAction("$BUILD_DIR/spiffs.bin", main)
+env.AddPostAction("$BUILD_DIR/${PROGNAME}.hex", main)
+# env.AddPostAction("$BUILD_DIR/spiffs.bin", main)
