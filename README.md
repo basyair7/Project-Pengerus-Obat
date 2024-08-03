@@ -1,4 +1,4 @@
-# Project Pengerus Obat
+# (薬剤研磨プロジェクト) Project Pengerus Obat
 ## Last Version
 - Hardware : v1
 - Firmware : 1.0.1
