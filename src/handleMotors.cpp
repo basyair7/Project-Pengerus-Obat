@@ -5,13 +5,13 @@
 bool HandleMotors::insertSpeedMotors() {
     bool x;
     lcd->clear();
-    lcd->print("Insert speed: ", 0, 0); // スピード入力の表示
+    lcd->print("Select speed: ", 0, 0); // スピード入力の表示
     lcd->print(key_lable[speedSelect], 0, 1); // 現在のスピード表示
     while (true) {
         char _key = keypad.getKey();
         if (_key) {
             lcd->clear();
-            lcd->print("Insert speed: ", 0, 0); // スピード入力の再表示
+            lcd->print("Select speed: ", 0, 0); // スピード入力の再表示
 
             if (_key == 'A' && _speed_motors != 0) {
                 lcd->clear();
