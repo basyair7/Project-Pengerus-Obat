@@ -126,7 +126,7 @@ void HandleMotors::run() {
                     LastMillis1 = currentMillis;
 
                     lcd->clear();
-                    if (state <= 3) {
+                    if (state >= 0 && state <= 5) {
                         // カウントダウンタイマーの表示
                         if (remainingSecs > 0) {
                             lcd->print("Remaining time: ", 0, 0);
@@ -139,19 +139,19 @@ void HandleMotors::run() {
                         }
                     }
 
-                    if (state >= 4 && state <= 7) {
+                    if (state >= 5 && state <= 10) {
                         String lblSpeed = key_lable[speedSelect] + " (" + String(pwmSpeed) + " PWM)";
                         lcd->print("Speed Motor: ", 0, 0);
                         lcd->print(lblSpeed, 0, 1); // スピード表示
                     }
 
-                    if (state >= 8) {
+                    if (state >= 10) {
                         // 終了時刻の表示
                         lcd->clear();
                         lcd->print("Finish at: ", 0, 0);
                         lcd->print(formatFinishTime, 0, 1);
 
-                        if (state >= 12) state = 0;
+                        if (state >= 15) state = 0;
                     }
 
                     state++;
