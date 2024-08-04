@@ -213,9 +213,11 @@ void HandleMotors::run() {
             finishTimeStr = formatFinishTime + " (" + String(durations) + " seconds)\n";
             finishTimeStr += "Status\t: Done.";
         }
+        delay(5000); // 結果を5秒間表示
+        
         sdcard->writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], pwmSpeed);
         TSprintln(finishTimeStr);
-        delay(5000); // 結果を5秒間表示
+        delay(100);
 
         _speed_motors = 0;
         speedSelect = 0;
