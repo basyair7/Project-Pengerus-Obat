@@ -102,6 +102,7 @@ void SDCard::writeReport(String date, String time, String finishTime, String spe
     else {
         // ファイルが開けなかった場合の表示
         TSprintln("Failed to open file for writing");
+        lcd->clear();
         lcd->print("Information: ", 0, 0);
         lcd->print("Failed...", 0, 1);
     }
@@ -110,19 +111,25 @@ void SDCard::writeReport(String date, String time, String finishTime, String spe
 void SDCard::SDCardInit() {
     LiquidCrystal_animated runningText;
     TSprintln("Initializing SD Card...");
-    // SDカード初期化メッセージの表示
+    // SDカードの初期化メッセージを表示
     for (byte i = 0; i <= 39; i++) {
         lcd->print(runningText.Scroll_LCD_Left("Initializing SD Card..."), 0, 0);
         delay(100);
     }
     runningText.Clear_Scroll_LCD_Left();
 
+    bool _return = false;
+    char quit;
     while (true) {
-        // SDカードの初期化
+        // SDカードの初期化を試みる
         if (!SD.begin(pinCS)) {
-            // 初期化失敗時の表示
+            // 初期化が失敗した場合のメッセージを表示
             TSprintln("Initializing SD Card failed! Please insert SD Card");
             TSprintln("Or check this SD Card Module adapter...\n");
+
+            // 'C' キーが押されているかどうかを確認する
+            if (_return) break;
+
             for (byte i = 0; i <= 67; i++) {
                 lcd->print(
                     runningText.Scroll_LCD_Left(
@@ -131,11 +138,14 @@ void SDCard::SDCardInit() {
                 );
 
                 delay(200);
-            }
-        }
 
-        else {
-            // 初期化成功時の表示
+                // 'C' キーが再度押されているかどうかを確認する
+                quit = _key.getKey();
+                if (quit == 'C') _return = true;
+            }
+            
+        } else {
+            // 初期化が成功した場合のメッセージを表示
             TSprintln("Done... Welcome");
             lcd->print("Done... Welcome", 0, 1);
             delay(500);

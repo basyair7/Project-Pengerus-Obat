@@ -47,7 +47,7 @@ private:
         rtc.begin();      // RTCの初期化
         // rtc.autoAdjust(); // RTCの自動調整
         lcd->init();      // LCDの初期化
-        // sdcard->SDCardInit(); // SDカードの初期化
+        sdcard->SDCardInit(); // SDカードの初期化
         menu.menu();      // メニューの初期化
     }
 

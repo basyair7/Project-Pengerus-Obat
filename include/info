@@ -30,6 +30,7 @@ public:
                 }
                 else if(stateinfo == 1) {
                     lcd->clear();
+                    lcd->print("Information", 2, 0); // 情報タイトルの表示
                     lcd->print("Build: " + buildDate, 0, 1); // ビルド日の表示
                 }
                 else if(stateinfo == 2) {

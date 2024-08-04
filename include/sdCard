@@ -5,6 +5,8 @@
 #include <ArduinoJson.h>
 #include <SD.h>
 #include <SPI.h>
+#include <Keypad.h>
+#include "variable.h"
 #include "TypeSerial"
 
 // SDカードクラス
@@ -32,6 +34,7 @@ private:
     
 private:
     File file;
+    Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
     const char* fileConfig  = "config.json";
     const char* fileReport = "report.txt";
 };
