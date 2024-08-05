@@ -198,7 +198,6 @@ void HandleMotors::run() {
                 if (remainingSecs <= 0) {
                     driver.stops(); // モーター停止
                     running = false; // プログラム終了
-                    saveStateToEEPROM(); // 状態をEEPROMに保存
                     stop_program = true;
                     break; // プログラムが終了した場合、ループを終了
                 }
@@ -226,7 +225,6 @@ void HandleMotors::run() {
                         finishTimeStr += "Status\t: Stopped.";
                         paused = false;
                         running = false; // プログラム停止
-                        saveStateToEEPROM(); // 状態をEEPROMに保存
                         break; // プログラムを停止した場合、run()関数を終了
                     } else if (confirmKey == 'C') {
                         lcd->clear();
@@ -236,13 +234,13 @@ void HandleMotors::run() {
                         formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻を再フォーマット
                         paused = false;
                         running = true; // プログラム再開
-                        saveStateToEEPROM(); // 状態をEEPROMに保存
+                        saveDurationToEEPROM(); // 状態をEEPROMに保存
                     }
                 }
             }
 
             if (stop_program) break;
-            saveStateToEEPROM(); // 状態をEEPROMに保存
+            saveDurationToEEPROM(); // 状態をEEPROMに保存
             delay(100); // CPU負荷を減らすために待機
         }
 
@@ -273,9 +271,13 @@ void HandleMotors::saveStateToEEPROM() {
     EEPROM.put(0, speedSelect);
     EEPROM.put(sizeof(speedSelect), _speed_motors);
     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
+    this->saveDurationToEEPROM();
+}
+
+void HandleMotors::saveDurationToEEPROM() {
     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
 }
 
 // EEPROMから状態を復元

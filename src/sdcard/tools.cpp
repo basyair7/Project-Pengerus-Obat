@@ -15,7 +15,6 @@ String SDCard::_read(String cfile) {
         file.close();
     }
     else {
-        lcd->print("Failed to open file to writing", 0, 0);
         val = "null";
     }
 
@@ -25,12 +24,11 @@ String SDCard::_read(String cfile) {
 void SDCard::_write(String cfile, String valJson) {
     file = SD.open(cfile, FILE_WRITE);
     if (file) {
-        file.write((const uint8_t *)valJson.c_str(), valJson.length());
+        file.print(valJson);
         file.close();
     }
     else {
-        lcd->print("Failed to create a new file", 0, 0);
-        TSprintln(cfile);
+        TSprintln("Failed to create a new file");
         return;
     }
 }

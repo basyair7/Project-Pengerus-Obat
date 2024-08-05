@@ -15,19 +15,15 @@ public:
     void SDCardInit(); // SDカードの初期化
 
 public:
-    // 設定を追加する
-    void addConfig(const String& configName, int id, int minute, int speed);
-    // 設定を読み取る
-    void readConfig(const String& configName, int* id, int* minute, int* speed);
-    void removeConfig(const String& configName); // 設定を削除する
     // レポートを書き込む
     void writeReport(String date, String time, String finishTime, String speed, String _speed_pwm);
 
-private:
-    // 設定を初期化する
-    void initializeConfig();
+public:
+    void backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int durations, unsigned long remainingSecs, bool running);
+    void restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, unsigned long *remainingSecs, bool *running);
 
 private:
+    void updateState(String cfile, void(*updateFunc)(StaticJsonDocument<500>&));
     String _read(String cfile); // ファイルからデータを読み取る
     void _write(String cfile, String valJson); // ファイルにデータを書き込む
     bool _remove(String cfile); // ファイルを削除する
@@ -35,8 +31,8 @@ private:
 private:
     File file;
     Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
-    const char* fileConfig  = "config.json";
-    const char* fileReport = "report.txt";
+    const String fileState  = "STATERUNNING.JSON";
+    const String fileReport = "REPORT.TXT";
 };
 
 #endif

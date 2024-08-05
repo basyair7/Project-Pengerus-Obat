@@ -3,7 +3,6 @@
 
 #include <Arduino.h>
 #include <RTClib.h>
-#include <EEPROM.h>
 #include <LiquidCrystal_animated.h>
 #include "motor.hpp"
 #include "variable.h"
@@ -27,9 +26,12 @@ private:
     bool init(); // 初期化関数
     bool insertSpeedMotors(); // スピード入力関数
     bool insertDurations(); // 時間入力関数
+
+private:
     void saveStateToEEPROM(); // 状態をEEPROMに保存
     void restoreStateFromEEPROM(); // 状態をEEPROMから復元
     void clearStateInEEPROM(); // EEPROMの状態をクリア
+    void saveDurationToEEPROM();
 
 private:
     Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッド

@@ -30,7 +30,7 @@ public:
                 lcd->print("Time: " + rtc.timestr(), 0, 1);
 
                 // 10秒経過後、バックライトを消灯
-                if (i >= 10) lcd->backlight(false);
+                if (i >= 180) lcd->backlight(false);
 
                 i++;
             }
