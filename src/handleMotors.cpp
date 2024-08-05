@@ -1,3 +1,4 @@
+#include <EEPROM.h>
 #include <handleMotors>
 #include <main.h>
 
@@ -88,14 +89,28 @@ bool HandleMotors::init() {
     bool p1, p2;
     driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D); // モーターの初期化
     _rtc.begin(); // RTCの初期化
+
+    restoreStateFromEEPROM(); // EEPROMからの復元
+    if (running && remainingSecs > 0) {
+        return true;
+    }
+
     p1 = this->insertSpeedMotors(); // スピード入力
     p1 ? p2 = this->insertDurations() : p2 = false; // 継続時間入力
 
     if (p1 && p2) {
+        remainingSecs = durations; // 初期の残り時間を設定
         return true;
-    }
-    else {
+    } else {
         return false;
+    }
+}
+
+// EEPROMの初期化
+void HandleMotors::initEEPROM() {
+    restoreStateFromEEPROM(); // EEPROMからの復元
+    if (running && remainingSecs > 0) {
+        run(); // プログラムを再開
     }
 }
 
@@ -105,19 +120,22 @@ void HandleMotors::run() {
 
     if (ready) {
         DateTime startTime = _rtc.now();
-        DateTime finishTime = startTime + TimeSpan(durations); // 継続時間を追加
-        String formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻をフォーマット
+        DateTime finishTime = startTime + TimeSpan(remainingSecs); // 残り時間を追加
+        String formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻をフォーマット;
         String finishTimeStr, remainingTime;
         bool stop_program = false;
         bool paused = false;
         int state = 0;
         unsigned long pausedAt = 0;
-        unsigned long remainingSecs = durations;
 
-        driver.run_forward(0); // モーターを連続的に動かす
+        float pwmPercentage = (pwmSpeed / 255.0) * 100;
+
+        running = true; // プログラムが実行中
+        saveStateToEEPROM(); // 状態をEEPROMに保存
 
         while (true) {
             if (!paused) {
+                driver.run_forward(0); // モーターを連続的に動かす
                 unsigned long currentMillis = millis();
                 DateTime currentTime = _rtc.now();
                 remainingSecs = finishTime.unixtime() - currentTime.unixtime(); // 残り時間を秒で計算
@@ -130,9 +148,12 @@ void HandleMotors::run() {
                         // カウントダウンタイマーの表示
                         if (remainingSecs > 0) {
                             lcd->print("Remaining time: ", 0, 0);
-                            int minutes = remainingSecs / 60;
+                            int hours   = remainingSecs / 3600;
+                            int minutes = (remainingSecs % 3600) / 60;
                             int seconds = remainingSecs % 60;
-                            remainingTime = String(minutes) + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+                            remainingTime = String(hours) + ":" + 
+                                            (minutes < 10 ? "0" : "") + String(minutes) + ":" + 
+                                            (seconds < 10 ? "0" : "") + String(seconds);
                             lcd->print(remainingTime, 0, 1);
                         } else {
                             lcd->print("Finished!", 0, 0);
@@ -140,42 +161,36 @@ void HandleMotors::run() {
                     }
 
                     if (state >= 5 && state <= 10) {
-                        String lblSpeed = key_lable[speedSelect] + " (" + String(pwmSpeed) + " PWM)";
-                        lcd->print("Speed Motor: ", 0, 0);
-                        lcd->print(lblSpeed, 0, 1); // スピード表示
+                        String lblSpeed = key_lable[speedSelect] + " (" + String(pwmPercentage) + " %)";
+                        lcd->print(lblSpeed, 0, 0);
+                        lcd->print("Finish at: " + formatFinishTime, 0, 1);
                     }
-
-                    if (state >= 10) {
-                        // 終了時刻の表示
-                        lcd->clear();
-                        lcd->print("Finish at: ", 0, 0);
-                        lcd->print(formatFinishTime, 0, 1);
-
-                        if (state >= 15) state = 0;
-                    }
-
                     state++;
+                    if (state > 10) state = 0;
                 }
 
-                // 時間が経過したかどうかを確認
                 if (remainingSecs <= 0) {
-                    break; // 継続時間が終了した場合、ループを終了
+                    driver.stops(); // モーター停止
+                    running = false; // プログラム終了
+                    saveStateToEEPROM(); // 状態をEEPROMに保存
+                    stop_program = true;
+                    break; // プログラムが終了した場合、ループを終了
                 }
             }
 
             // キーパッド入力の確認
             char key = keypad.getKey();
             if (key == 'B' && !paused) {
+                driver.stops();
                 lcd->clear();
-                lcd->print("Pause program?", 0, 0);
-                lcd->print("A: Stop  C: Resume", 0, 1);
+                lcd->print("Pause program...", 0, 0);
+                lcd->print("A:Stop C:Resume", 0, 1);
                 pausedAt = millis();
                 paused = true;
 
                 while (paused) {
                     char confirmKey = keypad.getKey();
                     if (confirmKey == 'A') {
-                        driver.stops();
                         lcd->clear();
                         lcd->print("Stopped.", 0, 0);
                         delay(2000); // メッセージを2秒間表示
@@ -184,6 +199,8 @@ void HandleMotors::run() {
                         finishTimeStr += "Remaining time\t: " + remainingTime + " seconds\n";
                         finishTimeStr += "Status\t: Stopped.";
                         paused = false;
+                        running = false; // プログラム停止
+                        saveStateToEEPROM(); // 状態をEEPROMに保存
                         break; // プログラムを停止した場合、run()関数を終了
                     } else if (confirmKey == 'C') {
                         lcd->clear();
@@ -192,11 +209,14 @@ void HandleMotors::run() {
                         finishTime = _rtc.now() + TimeSpan(remainingSecs);
                         formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻を再フォーマット
                         paused = false;
+                        running = true; // プログラム再開
+                        saveStateToEEPROM(); // 状態をEEPROMに保存
                     }
                 }
             }
 
             if (stop_program) break;
+            saveStateToEEPROM(); // 状態をEEPROMに保存
             delay(100); // CPU負荷を減らすために待機
         }
 
@@ -215,13 +235,40 @@ void HandleMotors::run() {
         }
         delay(3000); // 結果を5秒間表示
         
-        sdcard->writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], pwmSpeed);
+        sdcard->writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], String(pwmPercentage) + "%");
         TSprintln(finishTimeStr);
+        clearStateInEEPROM(); // EEPROMの状態をクリア
         delay(5000);
-
-        _speed_motors = 0;
-        speedSelect = 0;
-        pwmSpeed = 0;
-        durations = 0;
     }
+}
+
+// EEPROMに状態を保存
+void HandleMotors::saveStateToEEPROM() {
+    EEPROM.put(0, speedSelect);
+    EEPROM.put(sizeof(speedSelect), _speed_motors);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
+}
+
+// EEPROMから状態を復元
+void HandleMotors::restoreStateFromEEPROM() {
+    EEPROM.get(0, speedSelect);
+    EEPROM.get(sizeof(speedSelect), _speed_motors);
+    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
+    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
+}
+
+// EEPROMの状態をクリア
+void HandleMotors::clearStateInEEPROM() {
+    speedSelect = 0;
+    _speed_motors = 0;
+    pwmSpeed = 0;
+    durations = 0;
+    remainingSecs = 0;
+    running = false;
+    saveStateToEEPROM();
 }

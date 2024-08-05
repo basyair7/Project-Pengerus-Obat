@@ -1,36 +1,51 @@
 #ifndef HANDLEMOTORS_HPP
+#define HANDLEMOTORS_HPP
 
 #include <Arduino.h>
 #include <RTClib.h>
+#include <EEPROM.h>
 #include "motor.hpp"
 #include "variable.h"
 #include "Keypad.h"
 #include "menu.hpp"
 
+// #define EEPROM_ADDR_RUNNING_STATE 0x15
+// #define EEPROM_ADDR_REMAINING_TIME 0x13
+// #define EEPROM_ADDR_SPEED_SELECT 0x5
+// #define EEPROM_ADDR_PWM_SPEED 0x6
+// #define EEPROM_ADDR_DURATIONS 0x7
+// #define EEPROM_ADDR_SPEED_MOTORS 0x8
+
 // HandleMotorsクラスの定義
 class HandleMotors : protected VariableMillis {
 public:
     void run(); // メインの実行関数
+    void initEEPROM(); // EEPROMの初期化
 
 private:
     bool init(); // 初期化関数
     bool insertSpeedMotors(); // スピード入力関数
     bool insertDurations(); // 時間入力関数
+    void saveStateToEEPROM(); // 状態をEEPROMに保存
+    void restoreStateFromEEPROM(); // 状態をEEPROMから復元
+    void clearStateInEEPROM(); // EEPROMの状態をクリア
 
 private:
     Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッド
     DriverMotor driver; // モータードライバ
     uint8_t sizeListSpeed = 3; // スピードリストのサイズ
     int list_speed_motors[3] = { 50, 75, 100 }; // スピードリスト
-    const String key_lable[3] = { "slow", "normal", "fast" }; // スピードのラベル
+    const String key_lable[3] = { "Slow", "Normal", "Fast" }; // スピードのラベル
     const char key_map[3] = { '1', '2', '3' }; // キーマップ
 
 private:
     int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0; // スピード関連の変数
     int durations = 0; // 継続時間
+    unsigned long remainingSecs = 0; // 残り時間
     bool ready = false; // 準備完了フラグ
+    bool running = false; // プログラムが実行中かどうかのフラグ
     RTC_DS3231 _rtc; // RTCオブジェクト
     Menu _menu; // メニューオブジェクト
 };
 
-#endif
+#endif // HANDLEMOTORS_HPP

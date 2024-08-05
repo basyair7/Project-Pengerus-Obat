@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <RTClib.h>
@@ -26,6 +27,8 @@ public:
         }
 
         rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+
+        // resetEEPROM();
     }
 
     void loop() {
@@ -54,7 +57,12 @@ public:
             lcd->print(now.year());
         }
     }
-
+    
+    void resetEEPROM() {
+        for (int i = 0; i < EEPROM.length(); i++) {
+            EEPROM.write(i, 0xFF);
+        }
+    }
 private:
     unsigned long lastTime = 0;
     LiquidCrystal_I2C* lcd = new LiquidCrystal_I2C(0x27, 16, 2);
