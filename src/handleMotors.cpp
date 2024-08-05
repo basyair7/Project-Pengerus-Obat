@@ -234,7 +234,6 @@ void HandleMotors::run() {
                         formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻を再フォーマット
                         paused = false;
                         running = true; // プログラム再開
-                        saveDurationToEEPROM(); // 状態をEEPROMに保存
                     }
                 }
             }
@@ -271,13 +270,17 @@ void HandleMotors::saveStateToEEPROM() {
     EEPROM.put(0, speedSelect);
     EEPROM.put(sizeof(speedSelect), _speed_motors);
     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
-    this->saveDurationToEEPROM();
 }
 
 void HandleMotors::saveDurationToEEPROM() {
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    if ((unsigned long) (millis() - LastMillis2) >= 60000) {
+        LastMillis2 = millis();
+        EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+        EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    }
 }
 
 // EEPROMから状態を復元
