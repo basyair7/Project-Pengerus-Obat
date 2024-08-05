@@ -86,24 +86,32 @@ bool HandleMotors::insertDurations() {
 
 // 初期化関数
 bool HandleMotors::init() {
-    bool p1, p2;
     driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D); // モーターの初期化
     _rtc.begin(); // RTCの初期化
 
     restoreStateFromEEPROM(); // EEPROMからの復元
     if (running && remainingSecs > 0) {
-        return true;
+        // return true;
+        char key = keypad.getKey();
+        lcd->clear();
+        lcd->print("Resuming this program?", 0, 0);
+        lcd->print("A: yes, C: no", 0, 1);
+
+        if (key == 'A') {
+            return true;
+        }
+        else if (key == 'C') {
+            clearStateInEEPROM();
+        }
     }
+    bool speedInput    = this->insertSpeedMotors(); // スピード入力
+    bool durationInput = speedInput && this->insertDurations(); // 継続時間入力
 
-    p1 = this->insertSpeedMotors(); // スピード入力
-    p1 ? p2 = this->insertDurations() : p2 = false; // 継続時間入力
-
-    if (p1 && p2) {
+    if (durationInput) {
         remainingSecs = durations; // 初期の残り時間を設定
-        return true;
-    } else {
-        return false;
     }
+
+    return durationInput;
 }
 
 // EEPROMの初期化
