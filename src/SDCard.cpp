@@ -123,11 +123,10 @@ void SDCard::SDCardInit() {
     // SDカードの初期化メッセージを表示
     for (byte i = 0; i <= 39; i++) {
         lcd->print(runningText.Scroll_LCD_Left("Initializing SD Card..."), 0, 1);
-        delay(100);
+        delay(150);
     }
     runningText.Clear_Scroll_LCD_Left();
 
-    bool _return = false;
     char quit;
     while (true) {
         // SDカードの初期化を試みる
@@ -136,13 +135,12 @@ void SDCard::SDCardInit() {
             TSprintln("Initializing SD Card failed! Please insert SD Card");
             TSprintln("Or check this SD Card Module adapter...\n");
 
-            // 'C' キーが押されているかどうかを確認する
-            if (_return) break;
-
             for (byte i = 0; i <= 67; i++) {
                 // 'C' キーが再度押されているかどうかを確認する
                 quit = _key.getKey();
-                if (quit == 'C') _return = true;
+                if (quit == 'C') {
+                    return;
+                }
 
                 lcd->print(
                     runningText.Scroll_LCD_Left(

@@ -86,41 +86,50 @@ bool HandleMotors::insertDurations() {
 
 // 初期化関数
 bool HandleMotors::init() {
+    LiquidCrystal_animated runningText;
     bool state = false;
     driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D); // モーターの初期化
     _rtc.begin(); // RTCの初期化
 
     restoreStateFromEEPROM(); // EEPROMからの復元
     if (running && remainingSecs > 0) {
-        while (true) {
-            // return true;
-            char key = keypad.getKey();
-            lcd->clear();
-            lcd->print("Resuming this program?", 0, 0);
-            lcd->print("A: yes, C: no", 0, 1);
+        lcd->clear();
+        // lcd->print("Resuming this program?", 0, 0);
+        String top_str = "Resuming this program?";
+        char key;
+        lcd->print("*: yes, #: no", 0, 1);
 
-            if (key == 'A') {
-                bool state = true;
-                break;
+        while (true) {
+            for (int i = 0; i < (int)(top_str.length() + 16); i++) {
+                key = keypad.getKey();
+                if (key) break;
+                lcd->print(runningText.Scroll_LCD_Left(top_str), 0, 0);
+                delay(200);
             }
-            else if (key == 'C') {
+
+            if (key == '*') {
+                return true;
+            }
+            else if (key == 'B') {
+                return false;
+            }
+
+            else if (key == '#') {
                 clearStateInEEPROM();
                 break;
             }
         }
     }
-    
-    if (!state) {
-        bool speedInput    = this->insertSpeedMotors(); // スピード入力
-        bool durationInput = speedInput && this->insertDurations(); // 継続時間入力
 
-        if (durationInput) {
-            remainingSecs = durations; // 初期の残り時間を設定
-            state = durationInput;
-        }
+    bool speedInput    = this->insertSpeedMotors(); // スピード入力
+    bool durationInput = speedInput && this->insertDurations(); // 継続時間入力
+
+    if (durationInput) {
+        remainingSecs = durations; // 初期の残り時間を設定
+        state = durationInput;
     }
 
-    return state;
+    return durationInput;
 }
 
 // EEPROMの初期化
