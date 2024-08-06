@@ -247,7 +247,7 @@ void HandleMotors::run() {
         sdcard->writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], String(pwmPercentage) + "%");
         TSprintln(finishTimeStr);
         clearStateInEEPROM(); // EEPROMの状態をクリア
-        delay(5000);
+        delay(1000);
     }
 }
 
