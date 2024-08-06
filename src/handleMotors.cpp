@@ -4,54 +4,45 @@
 
 // スピード入力関数
 bool HandleMotors::insertSpeedMotors() {
-    bool x;
     lcd->clear();
+    speedSelect = 0;
+    _speed_motors = list_speed_motors[speedSelect];
     lcd->print("Select speed: ", 0, 0); // スピード入力の表示
     lcd->print(key_lable[speedSelect], 0, 1); // 現在のスピード表示
-    
-    bool validKey = false;
-    speedSelect = 0;
+    delay(50);
+
     while (true) {
         char _key = keypad.getKey();
         if (_key) {
             lcd->clear();
             lcd->print("Select speed: ", 0, 0); // スピード入力の再表示
 
+            for (uint8_t i = 0; i < sizeListSpeed; i++) {
+                if (_key == key_map[i]) {
+                    speedSelect = i;
+                    _speed_motors = list_speed_motors[speedSelect];
+                    lcd->print(key_lable[speedSelect], 0, 1); // 新しいスピード表示
+                }
+            }
+
             if (_key == 'A' && _speed_motors != 0) {
                 lcd->clear();
                 pwmSpeed = map(_speed_motors, 50, 100, 128, 255); // スピードをPWMにマッピング
                 driver.setSpeedPWM(pwmSpeed); // モーターのスピード設定
-                x = true;
-                break;
+                return true;
             }
-
             if (_key == 'B') {
-                x = false;
-                break;
+                return false;
             }
-
-            for (uint8_t i = 0; i < sizeListSpeed; i++) {
-                if (_key == key_map[i]) {
-                    speedSelect = i;
-                    _speed_motors = list_speed_motors[i];
-                    lcd->print(key_lable[speedSelect], 0, 1); // 新しいスピード表示
-                    validKey = true;
-                }
-            }
-
-            if (!validKey) {
-                _speed_motors = list_speed_motors[1];
-                lcd->print(key_lable[speedSelect], 0, 1); // デフォルトのスピード表示
+            else {
+                lcd->print(key_lable[speedSelect], 0, 1); // 新しいスピード表示
             }
         }
     }
-
-    return x;
 }
 
 // 継続時間入力関数
 bool HandleMotors::insertDurations() {
-    bool x;
     lcd->clear();
     lcd->print("Insert duration: ", 0, 0); // 継続時間入力の表示
     String inputDuration = ""; // ユーザー入力を保存
@@ -62,8 +53,7 @@ bool HandleMotors::insertDurations() {
             if (_key == 'A') { // 確認ボタン
                 if (inputDuration.length() > 0) { // 入力が空でないことを確認
                     durations = inputDuration.toInt(); // 文字列を整数に変換
-                    x = true;
-                    break;
+                    return true;
                 }
             } else if (_key == 'D') { // 入力を削除するボタン
                 inputDuration = ""; // 入力を削除
@@ -76,13 +66,10 @@ bool HandleMotors::insertDurations() {
                 lcd->print(inputDuration + " s", 0, 1); // 現在の入力を表示
             }
             else if (_key == 'B') {
-                x = false;
-                break;
+                return false;
             }
         }
     }
-
-    return x;
 }
 
 // 初期化関数
