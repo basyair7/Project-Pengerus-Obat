@@ -28,7 +28,6 @@ bool HandleMotors::insertSpeedMotors() {
             if (_key == 'A' && _speed_motors != 0) {
                 lcd->clear();
                 pwmSpeed = map(_speed_motors, 50, 100, 128, 255); // スピードをPWMにマッピング
-                driver.setSpeedPWM(pwmSpeed); // モーターのスピード設定
                 return true;
             }
             if (_key == 'B') {
@@ -142,6 +141,7 @@ void HandleMotors::run() {
         int state = 0;
         unsigned long pausedAt = 0;
 
+        driver.setSpeedPWM(pwmSpeed); // モーターのスピード設定
         float pwmPercentage = (pwmSpeed / 255.0) * 100;
 
         running = true; // プログラムが実行中
