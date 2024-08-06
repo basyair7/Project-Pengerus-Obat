@@ -10,7 +10,7 @@ bool HandleMotors::insertSpeedMotors() {
     lcd->print(key_lable[speedSelect], 0, 1); // 現在のスピード表示
     
     bool validKey = false;
-    speedSelect = 1;
+    speedSelect = 0;
     while (true) {
         char _key = keypad.getKey();
         if (_key) {
@@ -40,7 +40,6 @@ bool HandleMotors::insertSpeedMotors() {
             }
 
             if (!validKey) {
-                speedSelect = 1;
                 _speed_motors = list_speed_motors[1];
                 lcd->print(key_lable[speedSelect], 0, 1); // デフォルトのスピード表示
             }
