@@ -168,10 +168,9 @@ void HandleMotors::run() {
                 DateTime currentTime = _rtc.now();
                 remainingSecs = finishTime.unixtime() - currentTime.unixtime(); // 残り時間を秒で計算
 
+                lcd->clear();
                 if ((unsigned long)(currentMillis - LastMillis1) >= 1000) {
                     LastMillis1 = currentMillis;
-
-                    lcd->clear();
                     if (state >= 0 && state <= 5) {
                         // カウントダウンタイマーの表示
                         if (remainingSecs > 0) {
@@ -183,13 +182,11 @@ void HandleMotors::run() {
                                             (minutes < 10 ? "0" : "") + String(minutes) + ":" + 
                                             (seconds < 10 ? "0" : "") + String(seconds);
                             lcd->print(remainingTime, 0, 1);
-                        } else {
-                            lcd->print("Finished!", 0, 0);
                         }
                     }
 
                     if (state >= 5 && state <= 10) {
-                        String lblSpeed = key_lable[speedSelect] + " (" + String(pwmPercentage) + " %)";
+                        String lblSpeed = key_lable[speedSelect] + " (" + String(pwmPercentage) + " %)  ";
                         lcd->print(lblSpeed, 0, 0);
                         lcd->print("Finish at: " + formatFinishTime, 0, 1);
                     }
@@ -248,7 +245,7 @@ void HandleMotors::run() {
         driver.stops(); // モーター停止
 
         lcd->clear();
-        lcd->print("Done... ", 0, 0);
+        lcd->print("Finished! ", 0, 0);
         delay(2000);
         lcd->print(formatFinishTime + "(" + String(durations) + "s)", 0, 0);
         lcd->print("Speed: " + key_lable[speedSelect], 0, 1); // 結果表示
