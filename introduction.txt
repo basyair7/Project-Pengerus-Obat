@@ -1,9 +1,9 @@
 ~~~~~~~~~ Panduan penggunaan alat ~~~~~~~~~
 Interface (Tampilan):
-tombol A 		: Accept
-tombol B 		: Back
-tombol C 		: Cancel
-tombol D 		: Delete
+tombol A 	: Accept
+tombol B 	: Back
+tombol C 	: Cancel
+tombol D 	: Delete
 tombol reset	: reset system
 
 Fitur System:
