@@ -167,9 +167,10 @@ void HandleMotors::run() {
                 DateTime currentTime = _rtc.now();
                 remainingSecs = finishTime.unixtime() - currentTime.unixtime(); // 残り時間を秒で計算
 
-                lcd->clear();
                 if ((unsigned long)(currentMillis - LastMillis1) >= 1000) {
                     LastMillis1 = currentMillis;
+                    lcd->clear();
+                    
                     if (state >= 0 && state <= 5) {
                         // カウントダウンタイマーの表示
                         if (remainingSecs > 0) {
