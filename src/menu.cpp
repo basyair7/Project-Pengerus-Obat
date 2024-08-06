@@ -44,6 +44,8 @@ void Menu::menu() {
                 x = 1;
             }
         }
+
+        delay(50);
     }
 }
 

@@ -55,17 +55,17 @@ private:
     void _loop() {
         if (num_menu == 1) {
             handleMotors.run();  // モーターのハンドル実行
-            menu.menu();         // メニューの再表示
         }
         if (num_menu == 2) {
             info.run();  // 情報表示の実行
-            menu.menu(); // メニューの再表示
         }
         
         if (num_menu == 3) {
             standby.run(); // スタンバイモードの実行
         }
 
+        
+        menu.menu(); // メニューの再表示
         menu.switchToMenu(); // メニューへの切り替え
     }
 };

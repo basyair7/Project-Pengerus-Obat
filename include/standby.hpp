@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <Keypad.h>
 #include "main.h"
-#include "menu.hpp"
 #include "variable.h"
 #include "TypeSerial"
 
@@ -19,7 +18,7 @@ public:
             char key = _key.getKey();
             
             // 毎秒処理
-            if ((unsigned long) (millis() - LastMillis1) >= (long unsigned int)1000) {
+            if ((unsigned long) (millis() - LastMillis1) >= (long unsigned int) 900) {
                 LastMillis1 = millis();
                 
                 // 日付と時刻を表示
@@ -46,14 +45,12 @@ public:
                 lcd->backlight(true);
                 i = 0;
             }
+            
+            delay(100);
         }
-
-        // メニューに戻る
-        _menu.menu();
     }
 
 private:
-    Menu _menu;
     Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 };
 

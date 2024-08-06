@@ -7,7 +7,6 @@
 #include "motor.hpp"
 #include "variable.h"
 #include "Keypad.h"
-#include "menu.hpp"
 
 // #define EEPROM_ADDR_RUNNING_STATE 0x15
 // #define EEPROM_ADDR_REMAINING_TIME 0x13
@@ -48,7 +47,6 @@ private:
     bool ready = false; // 準備完了フラグ
     bool running = false; // プログラムが実行中かどうかのフラグ
     RTC_DS3231 _rtc; // RTCオブジェクト
-    Menu _menu; // メニューオブジェクト
 };
 
 #endif // HANDLEMOTORS_HPP
