@@ -251,41 +251,78 @@ void HandleMotors::run() {
     }
 }
 
+struct MotorState {
+    uint8_t speedSelect;
+    int _speed_motors;
+    int pwmSpeed;
+    int durations;
+    int remainingSecs;
+    bool running;
+};
+
+MotorState motorState;
+
 // EEPROMに状態を保存
 void HandleMotors::saveStateToEEPROM() {
-    EEPROM.put(0, speedSelect);
-    EEPROM.put(sizeof(speedSelect), _speed_motors);
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
-    EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
+    motorState.speedSelect   = speedSelect;
+    motorState._speed_motors = _speed_motors;
+    motorState.pwmSpeed      = pwmSpeed;
+    motorState.durations     = durations;
+    motorState.remainingSecs = remainingSecs;
+    motorState.running       = running;
+
+    EEPROM.put(0, motorState);
+    // EEPROM.put(0, speedSelect);
+    // EEPROM.put(sizeof(speedSelect), _speed_motors);
+    // EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
+    // EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+    // EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    // EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
 }
 
 void HandleMotors::saveDurationToEEPROM() {
     if ((unsigned long) (millis() - LastMillis2) >= 60000) {
         LastMillis2 = millis();
-        EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
-        EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+        motorState.durations = durations;
+        motorState.remainingSecs = remainingSecs;
+        EEPROM.put(offsetof(MotorState, durations), motorState.durations);
+        EEPROM.put(offsetof(MotorState, remainingSecs), motorState.remainingSecs);
     }
+    
+    // if ((unsigned long) (millis() - LastMillis2) >= 60000) {
+    //     LastMillis2 = millis();
+    //     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+    //     EEPROM.put(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    // }
 }
 
 // EEPROMから状態を復元
 void HandleMotors::restoreStateFromEEPROM() {
-    EEPROM.get(0, speedSelect);
-    EEPROM.get(sizeof(speedSelect), _speed_motors);
-    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
-    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
-    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
-    EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
+    EEPROM.get(0, motorState);
+
+    speedSelect   = motorState.speedSelect;
+    _speed_motors = motorState._speed_motors;
+    pwmSpeed      = motorState.pwmSpeed;
+    durations     = motorState.durations;
+    remainingSecs = motorState.remainingSecs;
+    running       = motorState.running;
+    
+    // EEPROM.get(0, speedSelect);
+    // EEPROM.get(sizeof(speedSelect), _speed_motors);
+    // EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors), pwmSpeed);
+    // EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed), durations);
+    // EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations), remainingSecs);
+    // EEPROM.get(sizeof(speedSelect) + sizeof(_speed_motors) + sizeof(pwmSpeed) + sizeof(durations) + sizeof(remainingSecs), running);
 }
 
 // EEPROMの状態をクリア
 void HandleMotors::clearStateInEEPROM() {
-    speedSelect = 0;
+    speedSelect   = 0;
     _speed_motors = 0;
-    pwmSpeed = 0;
-    durations = 0;
+    pwmSpeed      = 0;
+    durations     = 0;
     remainingSecs = 0;
-    running = false;
+    running       = false;
+
     saveStateToEEPROM();
 }
