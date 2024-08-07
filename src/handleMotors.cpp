@@ -78,7 +78,8 @@ bool HandleMotors::init() {
     driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D); // モーターの初期化
     _rtc.begin(); // RTCの初期化
 
-    restoreStateFromEEPROM(); // EEPROMからの復元
+    // restoreStateFromEEPROM(); // EEPROMからの復元
+    // restoreStateFromSDCard();
     if (running && remainingSecs > 0) {
         lcd->clear();
         // lcd->print("Resuming this program?", 0, 0);
@@ -145,7 +146,8 @@ void HandleMotors::run() {
         float pwmPercentage = (pwmSpeed / 255.0) * 100;
 
         running = true; // プログラムが実行中
-        saveStateToEEPROM(); // 状態をEEPROMに保存
+        // saveStateToSDCard();
+        // saveStateToEEPROM(); // 状態をEEPROMに保存
 
         while (true) {
             if (!paused) {
@@ -225,7 +227,8 @@ void HandleMotors::run() {
             }
 
             if (stop_program) break;
-            saveDurationToEEPROM(); // 状態をEEPROMに保存
+            // saveDurationToSDCard();
+            // saveDurationToEEPROM(); // 状態をEEPROMに保存
             delay(100); // CPU負荷を減らすために待機
         }
 
@@ -244,9 +247,10 @@ void HandleMotors::run() {
         }
         delay(3000); // 結果を5秒間表示
         
-        sdcard->writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], String(pwmPercentage) + "%");
+        sdcard.writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], String(pwmPercentage) + "%");
         TSprintln(finishTimeStr);
-        clearStateInEEPROM(); // EEPROMの状態をクリア
+        // clearStateInSDCard();
+        // clearStateInEEPROM(); // EEPROMの状態をクリア
         delay(1000);
     }
 }
@@ -325,4 +329,41 @@ void HandleMotors::clearStateInEEPROM() {
     running       = false;
 
     saveStateToEEPROM();
+}
+
+void HandleMotors::saveStateToSDCard() {
+    sdcard.backupState(
+        speedSelect, 
+        _speed_motors, 
+        pwmSpeed, 
+        durations, 
+        remainingSecs, 
+        running
+    );
+}
+
+void HandleMotors::saveDurationToSDCard() {
+    this->saveStateToSDCard();
+}
+
+void HandleMotors::restoreStateFromSDCard() {
+    sdcard.restoreState(
+        &speedSelect,
+        &_speed_motors, 
+        &pwmSpeed, 
+        &durations, 
+        &remainingSecs, 
+        &running
+    );
+}
+
+void HandleMotors::clearStateInSDCard() {
+    speedSelect   = 0;
+    _speed_motors = 0;
+    pwmSpeed      = 0;
+    durations     = 0;
+    remainingSecs = 0;
+    running       = false;
+
+    this->saveStateToSDCard();
 }

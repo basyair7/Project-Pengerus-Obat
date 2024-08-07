@@ -30,11 +30,17 @@ private:
     void saveStateToEEPROM(); // 状態をEEPROMに保存
     void restoreStateFromEEPROM(); // 状態をEEPROMから復元
     void clearStateInEEPROM(); // EEPROMの状態をクリア
-    void saveDurationToEEPROM();
+    void saveDurationToEEPROM(); // 継続時間をEEPROMに保存
 
 private:
-    Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッド
-    DriverMotor driver; // モータードライバ
+    void saveStateToSDCard(); // 状態をSDカードに保存
+    void restoreStateFromSDCard(); // 状態をSDカードから復元
+    void clearStateInSDCard(); // SDカードの状態をクリア
+    void saveDurationToSDCard(); // 継続時間をSDカードに保存
+
+private:
+    Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッドオブジェクト
+    DriverMotor driver; // モータードライバオブジェクト
     uint8_t sizeListSpeed = 3; // スピードリストのサイズ
     int list_speed_motors[3] = { 50, 75, 100 }; // スピードリスト
     const String key_lable[3] = { "Slow", "Normal", "Fast" }; // スピードのラベル
