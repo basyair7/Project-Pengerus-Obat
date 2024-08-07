@@ -8,7 +8,7 @@
 
 extern LCDdisplay* lcd;
 extern DS3231rtc rtc;
-extern SDCard* sdcard;
+extern SDCard sdcard;
 extern byte num_menu;
 
 #endif

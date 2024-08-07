@@ -13,7 +13,7 @@
 // グローバルオブジェクトの初期化
 LCDdisplay* lcd = new LCDdisplay;
 DS3231rtc rtc;
-SDCard* sdcard = new SDCard;
+SDCard sdcard;
 
 StandByProgram standby;
 HandleMotors handleMotors;
@@ -47,7 +47,7 @@ private:
         rtc.begin();      // RTCの初期化
         // rtc.autoAdjust(); // RTCの自動調整
         lcd->init();      // LCDの初期化
-        sdcard->SDCardInit(); // SDカードの初期化
+        sdcard.SDCardInit(); // SDカードの初期化
         menu.menu();      // メニューの初期化
     }
 
