@@ -23,9 +23,9 @@ public:
     void restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, unsigned long *remainingSecs, bool *running);
 
 private:
-    String _read(String cfile); // ファイルからデータを読み取る
-    void _write(String cfile, String valJson); // ファイルにデータを書き込む
-    bool _remove(String cfile); // ファイルを削除する
+    String _read(const String& cfile); // ファイルからデータを読み取る
+    void _write(const String&, String valJson); // ファイルにデータを書き込む
+    bool _remove(const String& cfile); // ファイルを削除する
     
 private:
     File file;
