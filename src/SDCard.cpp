@@ -65,11 +65,8 @@ void SDCard::backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int d
     String newState;
     serializeJson(doc, newState);
 
+    this->_write(fileState, newState);
     TSprintln("State to be saved: " + newState);
-
-    if (this->_remove(fileState)) {
-        this->_write(fileState, newState);
-    }
 }
 
 void SDCard::restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, unsigned long *remainingSecs, bool *running)
@@ -154,7 +151,7 @@ void SDCard::writeReport(String date, String time, String finishTime, String spe
     }
 }
 
-String SDCard::_read(String cfile) {
+String SDCard::_read(const String& cfile) {
     String val;
     if (!SD.exists(cfile)) {
         val = "null";
@@ -175,9 +172,14 @@ String SDCard::_read(String cfile) {
     return val;
 }
 
-void SDCard::_write(String cfile, String valJson) {
+void SDCard::_write(const String& cfile, String valJson) {
+    if (SD.exists(cfile)) {
+        SD.remove(cfile);
+    }
+
     file = SD.open(cfile, FILE_WRITE);
     if (file) {
+        file.seek(0);
         file.write((const uint8_t *) valJson.c_str(), valJson.length());
         file.close();
     }
@@ -188,7 +190,7 @@ void SDCard::_write(String cfile, String valJson) {
     }
 }
 
-bool SDCard::_remove(String cfile) {
+bool SDCard::_remove(const String& cfile) {
     if (!SD.exists(cfile)) {
         return false;
     }
