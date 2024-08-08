@@ -43,7 +43,7 @@ private:
     DriverMotor driver; // モータードライバオブジェクト
     uint8_t sizeListSpeed = 3; // スピードリストのサイズ
     int list_speed_motors[3] = { 50, 75, 100 }; // スピードリスト
-    const String key_lable[3] = { "Slow", "Normal", "Fast" }; // スピードのラベル
+    const String key_lable[3] = { "Slow", "Medium", "Fast" }; // スピードのラベル
     const char key_map[3] = { '1', '2', '3' }; // キーマップ
 
 private:

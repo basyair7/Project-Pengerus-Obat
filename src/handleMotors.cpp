@@ -79,7 +79,7 @@ bool HandleMotors::init() {
     _rtc.begin(); // RTCの初期化
 
     // restoreStateFromEEPROM(); // EEPROMからの復元
-    // restoreStateFromSDCard();
+    restoreStateFromSDCard();
     if (running && remainingSecs > 0) {
         lcd->clear();
         // lcd->print("Resuming this program?", 0, 0);
@@ -146,7 +146,9 @@ void HandleMotors::run() {
         float pwmPercentage = (pwmSpeed / 255.0) * 100;
 
         running = true; // プログラムが実行中
-        // saveStateToSDCard();
+        if (remainingSecs >= 60) {
+            saveStateToSDCard();
+        }
         // saveStateToEEPROM(); // 状態をEEPROMに保存
 
         while (true) {
@@ -227,7 +229,7 @@ void HandleMotors::run() {
             }
 
             if (stop_program) break;
-            // saveDurationToSDCard();
+            saveDurationToSDCard();
             // saveDurationToEEPROM(); // 状態をEEPROMに保存
             delay(100); // CPU負荷を減らすために待機
         }
@@ -249,7 +251,7 @@ void HandleMotors::run() {
         
         sdcard.writeReport(rtc.datestr(), rtc.timestr(), finishTimeStr, key_lable[speedSelect], String(pwmPercentage) + "%");
         TSprintln(finishTimeStr);
-        // clearStateInSDCard();
+        clearStateInSDCard();
         // clearStateInEEPROM(); // EEPROMの状態をクリア
         delay(1000);
     }
@@ -343,7 +345,10 @@ void HandleMotors::saveStateToSDCard() {
 }
 
 void HandleMotors::saveDurationToSDCard() {
-    this->saveStateToSDCard();
+    if ((unsigned long) (millis() - LastMillis2) >= 60000) {
+        LastMillis2 = millis();
+        this->saveStateToSDCard();
+    }
 }
 
 void HandleMotors::restoreStateFromSDCard() {

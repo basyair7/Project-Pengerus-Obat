@@ -6,10 +6,10 @@
 // 定義と定数
 #define pinCS 53
 
-#define PIN_MOTOR_A 24
-#define PIN_MOTOR_B 25
-#define PIN_MOTOR_C 26
-#define PIN_MOTOR_D 27
+#define PIN_MOTOR_A 11
+#define PIN_MOTOR_B 10
+#define PIN_MOTOR_C 13
+#define PIN_MOTOR_D 12
 
 // キーパッドの行と列の数
 static const byte ROWS = 4;
