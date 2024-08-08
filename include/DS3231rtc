@@ -11,6 +11,7 @@
 class DS3231rtc {
 public:
     void begin(); // RTCの初期化
+    DateTime DSnow();
     void autoAdjust(); // 時刻の自動調整
     void date(uint8_t* day, uint8_t* month, uint8_t* year); // 日付を取得
     void time(uint8_t* hour, uint8_t* minute, uint8_t* second); // 時刻を取得

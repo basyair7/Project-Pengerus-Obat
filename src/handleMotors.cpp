@@ -76,7 +76,7 @@ bool HandleMotors::init() {
     LiquidCrystal_animated runningText;
     bool state = false;
     driver.init(PIN_MOTOR_A, PIN_MOTOR_B, PIN_MOTOR_C, PIN_MOTOR_D); // モーターの初期化
-    _rtc.begin(); // RTCの初期化
+    // _rtc.begin(); // RTCの初期化
 
     // restoreStateFromEEPROM(); // EEPROMからの復元
     restoreStateFromSDCard();
@@ -133,7 +133,7 @@ void HandleMotors::run() {
     ready = init(); // 初期化
 
     if (ready) {
-        DateTime startTime = _rtc.now();
+        DateTime startTime = rtc.DSnow();
         DateTime finishTime = startTime + TimeSpan(remainingSecs); // 残り時間を追加
         String formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻をフォーマット;
         String finishTimeStr, remainingTime;
@@ -155,7 +155,7 @@ void HandleMotors::run() {
             if (!paused) {
                 driver.run_forward(0); // モーターを連続的に動かす
                 unsigned long currentMillis = millis();
-                DateTime currentTime = _rtc.now();
+                DateTime currentTime = rtc.DSnow();
                 remainingSecs = finishTime.unixtime() - currentTime.unixtime(); // 残り時間を秒で計算
 
                 if ((unsigned long)(currentMillis - LastMillis1) >= 1000) {
@@ -220,7 +220,7 @@ void HandleMotors::run() {
                         lcd->clear();
                         lcd->print("Resuming...", 0, 0);
                         delay(2000); // メッセージを2秒間表示
-                        finishTime = _rtc.now() + TimeSpan(remainingSecs);
+                        finishTime = rtc.DSnow() + TimeSpan(remainingSecs);
                         formatFinishTime = finishTime.toString("hh:mm:ss"); // 終了時刻を再フォーマット
                         paused = false;
                         running = true; // プログラム再開

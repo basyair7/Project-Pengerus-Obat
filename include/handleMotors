@@ -52,7 +52,7 @@ private:
     unsigned long remainingSecs = 0; // 残り時間
     bool ready = false; // 準備完了フラグ
     bool running = false; // プログラムが実行中かどうかのフラグ
-    RTC_DS3231 _rtc; // RTCオブジェクト
+    // RTC_DS3231 _rtc; // RTCオブジェクト
 };
 
 #endif // HANDLEMOTORS_HPP

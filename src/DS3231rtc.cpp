@@ -14,6 +14,10 @@ void DS3231rtc::begin() {
     }
 }
 
+DateTime DS3231rtc::DSnow() {
+    return _rtc.now();
+}
+
 // RTCの時間を自動で調整する関数
 void DS3231rtc::autoAdjust() {
     _rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
