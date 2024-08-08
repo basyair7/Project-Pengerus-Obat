@@ -49,7 +49,7 @@ private:
 private:
     int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0; // スピード関連の変数
     int durations = 0; // 継続時間
-    unsigned long remainingSecs = 0; // 残り時間
+    uint32_t remainingSecs = 0; // 残り時間
     bool ready = false; // 準備完了フラグ
     bool running = false; // プログラムが実行中かどうかのフラグ
     // RTC_DS3231 _rtc; // RTCオブジェクト

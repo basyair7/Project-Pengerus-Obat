@@ -51,7 +51,7 @@ void SDCard::SDCardInit() {
     }
 }
 
-void SDCard::backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int durations, unsigned long remainingSecs, bool running) 
+void SDCard::backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int durations, uint32_t remainingSecs, bool running) 
 {
     TSprintln("Backing up state...");
     StaticJsonDocument<500> doc;
@@ -69,7 +69,7 @@ void SDCard::backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int d
     TSprintln("State to be saved: " + newState);
 }
 
-void SDCard::restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, unsigned long *remainingSecs, bool *running)
+void SDCard::restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, uint32_t *remainingSecs, bool *running)
 {
     StaticJsonDocument<500> doc;
     String readState = this->_read(fileState);
