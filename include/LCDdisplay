@@ -1,0 +1,29 @@
+/*! @file LCDdisplay.hpp
+ * @version 1.0.0
+*/
+
+#ifndef LCDDISPLAY_HPP
+#define LCDDISPLAY_HPP
+
+#include <Arduino.h>
+#include <LiquidCrystal_I2C.h>
+
+class LCDdisplay {
+public:
+    // Initialize LCD function
+    void init();
+    // Clear LCD function
+    void clear();
+    // backlight on/off
+    void backlight(bool x);
+    // string display
+    void print(const String& x, const uint8_t col, const uint8_t row);
+
+public:
+    int cols = 16, rows = 2;
+
+private:
+    LiquidCrystal_I2C* lcd = new LiquidCrystal_I2C(0x27, cols, rows);
+};
+
+#endif

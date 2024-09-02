@@ -1,0 +1,60 @@
+/*! @file info.hpp
+ * @version 1.0.0
+*/
+
+
+#ifndef INFO_HPP
+#define INFO_HPP
+
+#include <Arduino.h>
+#include <Keypad.h>
+#include "main.h"
+#include "variable.h"
+
+// 情報ファームウェアとボードのクラス
+class Info : protected VariableMillis {
+public:
+    void run() {
+        while (true) {
+            char key = _key.getKey();
+            if (key == 'B') {
+                break; // 'B'キーが押されたらループを抜ける
+            }
+
+            if((unsigned long) (millis() - LastMillis1) >= 1000) {
+                LastMillis1 = millis();
+                stateinfo++; // 状態を更新
+                if(stateinfo >= 3) stateinfo = 0; // 状態が3以上になったらリセット
+            }
+
+            if((unsigned long) (millis() - LastMillis2) >= 500) {
+                LastMillis2 = millis();
+                lcd->clear();
+                lcd->print("Information", 2, 0); // 情報タイトルの表示
+                
+                if(stateinfo == 0) {
+                    lcd->print("Firmware: " + firmwareVer, 0, 1); // ファームウェアバージョンの表示
+                }
+                else if(stateinfo == 1) {
+                    lcd->print("Build: " + buildDate, 0, 1); // ビルド日の表示
+                }
+                else if(stateinfo == 2) {
+                    lcd->print("Board:" + boardChipset, 0, 1); // ボードチップセットの表示
+                }
+            }
+
+            delay(100);
+        }
+    }
+
+private:
+    const String boardChipset  = "atmega2560"; // ボードのチップセット
+    const String firmwareVer   = "V1.0.0"; // ファームウェアのバージョン
+    const String buildDate     = "8/2/2024"; // ビルドの日付
+    uint8_t stateinfo = 0; // 状態情報
+
+private:
+    Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッド
+};
+
+#endif

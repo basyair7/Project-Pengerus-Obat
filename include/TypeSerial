@@ -1,0 +1,18 @@
+/*! @file TypeSerial.hpp
+ * @version 1.0.0
+*/
+
+#ifndef TYPESERIAL_HPP
+#define TYPESERIAL_HPP
+
+#include <Arduino.h>
+
+extern "C" {
+    #define TSbegin Serial.begin
+    #define TSavaiable Serial.avaiable
+    #define TSprint Serial.print
+    #define TSprintln Serial.println
+    #define TSwrite Serial.write
+}
+
+#endif

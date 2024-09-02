@@ -1,0 +1,41 @@
+/*! @file SDCard.hpp
+ * @version 1.0.0
+*/
+
+#ifndef SDCARD_HPP
+#define SDCARD_HPP
+
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <SD.h>
+#include <SPI.h>
+#include <Keypad.h>
+#include "variable.h"
+#include "TypeSerial"
+
+// SD Card Class
+class SDCard {
+public:
+    void SDCardInit(); // SD Card Initialization
+
+public:
+    // write a report
+    void writeReport(String date, String time, String finishTime, String speed, String _speed_pwm);
+
+public:
+    void backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int durations, uint32_t remainingSecs, bool running);
+    void restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, uint32_t *remainingSecs, bool *running);
+
+private:
+    String _read(const String& cfile); // read data from a file
+    void _write(const String&, String valJson); // write data to a file
+    bool _remove(const String& cfile); // delete a file
+    
+private:
+    File file;
+    Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+    String fileState  = "STATE.TXT";
+    String fileReport = "REPORT.TXT";
+};
+
+#endif

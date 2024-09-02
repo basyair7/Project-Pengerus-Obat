@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.asm": "masm",
+        "TypeSerial": "cpp",
+        "LCDdisplay": "cpp",
+        "sdCard": "cpp",
+        "DS3231rtc": "cpp",
+        "handlemotors": "cpp",
+        "info": "cpp"
+    }
+}

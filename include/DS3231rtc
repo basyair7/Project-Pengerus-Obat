@@ -1,0 +1,33 @@
+/*! @file DS3231rtc.hpp
+ * @version 1.0.0
+*/
+
+
+#ifndef DS3231RTC_HPP
+#define DS3231RTC_HPP
+
+#include <Arduino.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <RTClib.h>
+#include "TypeSerial"
+
+// DS3231rtc class definition
+class DS3231rtc {
+public:
+    void begin(); // initialization of RTC
+    DateTime DSnow();
+    void autoAdjust(); // Automatic Time Adjustment
+    void date(uint8_t* day, uint8_t* month, uint8_t* year); // Get date
+    void time(uint8_t* hour, uint8_t* minute, uint8_t* second); // Get time
+    String datestr(); // Get date as string
+    String timestr(); // Get time as string
+    String estimateFinishTime(int durationInSeconds); // Calculate estimated time to end
+    DateTime rtcNow(); // Get the current DateTime
+
+private:
+    RTC_DS3231 _rtc; // RTC Object
+    DateTime now; // DateTime Object
+};
+
+#endif

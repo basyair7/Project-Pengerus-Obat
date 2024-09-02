@@ -1,0 +1,25 @@
+~~~~~~~~~ Panduan penggunaan alat ~~~~~~~~~
+Interface (Tampilan):
+tombol A 	: Accept
+tombol B 	: Back
+tombol C 	: Cancel
+tombol D 	: Delete
+tombol reset	: reset system
+
+Fitur System:
+1. Run Program
+2. Info Board
+3. Mode StandBy
+
+1. Run Program
+- Masukan kecepatan putaran motor (1. Slow, 2. Normal, 3. Fast)
+- Masukan durasi (dalam satuan detik/seconds)
+
+note: 
+*untuk berhenti/pause program, tekan tombol B
+**untuk kecepatan motor digunakan nilai PWM duty cycle (nilai persentase = (PWM/255.0) x 100%)
+***jika muncul error "Failed to save report.txt" :
+1. Kesalahan kartu SD Card tidak dimasukan
+2. Kesalahan supply catu daya lemah
+3. Sisa penyimpanan SD Card hampir penuh
+4. Kesalahan pada SD Card (SDCard Corrupted Error)

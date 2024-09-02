@@ -1,0 +1,48 @@
+/*! @file handleMotors.hpp
+ * @version 1.0.0
+*/
+
+#ifndef HANDLEMOTORS_HPP
+#define HANDLEMOTORS_HPP
+
+#include <Arduino.h>
+#include <RTClib.h>
+#include <LiquidCrystal_animated.h>
+#include "motor.hpp"
+#include "variable.h"
+#include "Keypad.h"
+
+// Define class HandleMotors
+class HandleMotors : protected VariableMillis {
+public:
+    void run(); // Main Execution Function
+
+private:
+    bool init(); // Initializing function
+    bool insertSpeedMotors(); // Speed input function
+    bool insertDurations(); // Time entry function
+
+private:
+    void saveStateToSDCard(); // save state to SDCard
+    void restoreStateFromSDCard(); // restore state from SDCard
+    void clearStateInSDCard(); // clear SDCard state
+    void saveDurationToSDCard(); // Save duration to SDCard
+
+private:
+    Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // keypad object
+    DriverMotor driver; // DriverMotor object
+    uint8_t sizeListSpeed = 3; // speed list size
+    int list_speed_motors[3] = { 50, 75, 100 }; // speed list
+    const String key_lable[3] = { "Slow", "Medium", "Fast" }; // speed labels
+    const char key_map[3] = { '1', '2', '3' }; // key-map
+
+private:
+    int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0; // speed-related variables
+    int durations = 0; // duration
+    uint32_t remainingSecs = 0; // Time remaining
+    bool ready = false; // ready flag
+    bool running = false; // flag whether the program is running or not
+    RTC_DS3231 _rtc; // RTC object
+};
+
+#endif // HANDLEMOTORS_HPP
