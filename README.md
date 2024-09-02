@@ -9,4 +9,4 @@
 - add handlers program (menu, handleMotor, standby, info)
 
 ## Introduction program
-- <a href="https://github.com/basyair7/Project-Pengerus-Obat/blob/master/introduction.txt">Click Here</a>
+- <a href="https://github.com/basyair7/Project-Pengerus-Obat/blob/V1.0.0/introduction.txt">Click Here</a>
