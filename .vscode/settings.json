@@ -6,6 +6,7 @@
         "sdCard": "cpp",
         "DS3231rtc": "cpp",
         "handlemotors": "cpp",
-        "info": "cpp"
+        "info": "cpp",
+        "relaycontroller": "cpp"
     }
 }
