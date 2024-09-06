@@ -8,6 +8,7 @@
 #include <Arduino.h>
 #include <RTClib.h>
 #include <LiquidCrystal_animated.h>
+#include "relaycontroller"
 #include "motor.hpp"
 #include "variable.h"
 #include "Keypad.h"
@@ -31,12 +32,14 @@ private:
 private:
     Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // keypad object
     DriverMotor driver; // DriverMotor object
+    relaycontroller relay;
     uint8_t sizeListSpeed = 3; // speed list size
     int list_speed_motors[3] = { 50, 75, 100 }; // speed list
     const String key_lable[3] = { "Slow", "Medium", "Fast" }; // speed labels
     const char key_map[3] = { '1', '2', '3' }; // key-map
 
 private:
+    uint8_t relayState = OFF;
     int speedSelect = 0, _speed_motors = 0, pwmSpeed = 0; // speed-related variables
     int durations = 0; // duration
     uint32_t remainingSecs = 0; // Time remaining

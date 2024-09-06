@@ -131,15 +131,18 @@ void HandleMotors::run() {
         DateTime finishTime = _rtc.now() + TimeSpan(remainingSecs); // add remaining time
         String formatFinishTime = finishTime.toString("hh:mm:ss"); // format the end time
         String finishTimeStr, remainingTime;
+        
+        running = true; // program is running
         bool stop_program = false;
         bool paused = false;
         int state = 0;
         unsigned long pausedAt = 0;
+        relayState = ON;
 
         driver.setSpeedPWM(pwmSpeed); // set speed motors
+        relay.write(relayState, 1000);
         float pwmPercentage = (pwmSpeed / 255.0) * 100;
-
-        running = true; // program is running
+        
         if (remainingSecs >= 60) {
             saveStateToSDCard();
         }
@@ -189,7 +192,9 @@ void HandleMotors::run() {
             // confirmation of keypad input
             char key = keypad.getKey();
             if (key == 'B' && !paused) {
+                relayState = OFF;
                 driver.stops();
+                relay.write(relayState, 1000);
                 lcd->clear();
                 lcd->print("Pause program...", 0, 0);
                 lcd->print("A:Stop C:Resume", 0, 1);
@@ -251,6 +256,7 @@ void HandleMotors::run() {
 
 void HandleMotors::saveStateToSDCard() {
     sdcard.backupState(
+        relayState,
         speedSelect, 
         _speed_motors, 
         pwmSpeed, 
@@ -269,6 +275,7 @@ void HandleMotors::saveDurationToSDCard() {
 
 void HandleMotors::restoreStateFromSDCard() {
     sdcard.restoreState(
+        &relayState,
         &speedSelect,
         &_speed_motors, 
         &pwmSpeed, 
@@ -279,6 +286,7 @@ void HandleMotors::restoreStateFromSDCard() {
 }
 
 void HandleMotors::clearStateInSDCard() {
+    relayState    = OFF;
     speedSelect   = 0;
     _speed_motors = 0;
     pwmSpeed      = 0;

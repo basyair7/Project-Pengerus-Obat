@@ -23,8 +23,8 @@ public:
     void writeReport(String date, String time, String finishTime, String speed, String _speed_pwm);
 
 public:
-    void backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int durations, uint32_t remainingSecs, bool running);
-    void restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, uint32_t *remainingSecs, bool *running);
+    void backupState(uint8_t relayState, int _speedSelect, int _speed_motor, int pwmSpeed, int durations, uint32_t remainingSecs, bool running);
+    void restoreState(uint8_t* relayState, int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, uint32_t *remainingSecs, bool *running);
 
 private:
     String _read(const String& cfile); // read data from a file

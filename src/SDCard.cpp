@@ -3,6 +3,7 @@
 */
 
 #include <SDCard>
+#include <relaycontroller>
 #include <main.h>
 #include <variable.h>
 #include <LiquidCrystal_animated.h>
@@ -55,10 +56,11 @@ void SDCard::SDCardInit() {
     }
 }
 
-void SDCard::backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int durations, uint32_t remainingSecs, bool running) 
+void SDCard::backupState(uint8_t relayState, int _speedSelect, int _speed_motor, int pwmSpeed, int durations, uint32_t remainingSecs, bool running) 
 {
     TSprintln("Backing up state...");
     StaticJsonDocument<500> doc;
+    doc["relaystate"]       = relayState;
     doc["speedSelect"]      = _speedSelect;
     doc["speedMotor"]       = _speed_motor;
     doc["pwmSpeed"]         = pwmSpeed;
@@ -73,12 +75,13 @@ void SDCard::backupState(int _speedSelect, int _speed_motor, int pwmSpeed, int d
     TSprintln("State to be saved: " + newState);
 }
 
-void SDCard::restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, uint32_t *remainingSecs, bool *running)
+void SDCard::restoreState(uint8_t* relayState, int *_speedSelect, int *_speed_motor, int *pwmSpeed, int *durations, uint32_t *remainingSecs, bool *running)
 {
     StaticJsonDocument<500> doc;
     String readState = this->_read(fileState);
 
     if (readState == "null") {
+        *relayState     = OFF;
         *_speedSelect   = 0;
         *_speed_motor   = 0;
         *pwmSpeed       = 0;
@@ -86,6 +89,7 @@ void SDCard::restoreState(int *_speedSelect, int *_speed_motor, int *pwmSpeed, i
         *remainingSecs  = 0;
         *running        = false;
 
+        doc["relaystate"]       = OFF;
         doc["speedSelect"]      = 0;
         doc["speedMotor"]       = 0;
         doc["pwmSpeed"]         = 0;
