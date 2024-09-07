@@ -25,5 +25,6 @@ note:
 4. Kesalahan pada SD Card (SDCard Corrupted Error)
 
 note repository:
-folder src      -> berisi program main atau program utama
 folder include  -> berisi program header atau deklarasi kelas program
+folder src      -> berisi program main atau program utama
+folder lib      -> berisi program library
