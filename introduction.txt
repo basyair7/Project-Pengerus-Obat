@@ -23,3 +23,7 @@ note:
 2. Kesalahan supply catu daya lemah
 3. Sisa penyimpanan SD Card hampir penuh
 4. Kesalahan pada SD Card (SDCard Corrupted Error)
+
+note repository:
+folder src      -> berisi program main atau program utama
+folder include  -> berisi program header atau deklarasi kelas program
