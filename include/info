@@ -2,6 +2,7 @@
  * @version 1.0.0
 */
 
+#pragma once
 
 #ifndef INFO_HPP
 #define INFO_HPP

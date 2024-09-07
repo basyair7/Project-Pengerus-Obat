@@ -3,6 +3,8 @@
 */
 
 
+#pragma once
+
 #ifndef DS3231RTC_HPP
 #define DS3231RTC_HPP
 

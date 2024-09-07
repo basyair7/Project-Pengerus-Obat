@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef MAIN_H
 #define MAIN_H
 

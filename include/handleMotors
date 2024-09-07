@@ -2,13 +2,15 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef HANDLEMOTORS_HPP
 #define HANDLEMOTORS_HPP
 
 #include <Arduino.h>
 #include <RTClib.h>
 #include <LiquidCrystal_animated.h>
-#include "relaycontroller"
+#include "relaycontroller.h"
 #include "motor.hpp"
 #include "variable.h"
 #include "Keypad.h"
@@ -32,7 +34,7 @@ private:
 private:
     Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // keypad object
     DriverMotor driver; // DriverMotor object
-    relaycontroller relay;
+    relaycontroller relay = relaycontroller(PIN_RELAY);
     uint8_t sizeListSpeed = 3; // speed list size
     int list_speed_motors[3] = { 50, 75, 100 }; // speed list
     const String key_lable[3] = { "Slow", "Medium", "Fast" }; // speed labels

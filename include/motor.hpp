@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef MOTOR_HPP
 #define MOTOR_HPP
 

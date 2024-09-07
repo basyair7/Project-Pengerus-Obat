@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
@@ -10,6 +12,7 @@
 // 定義と定数
 #define pinCS 53
 
+#define PIN_RELAY   22
 #define PIN_MOTOR_A 11
 #define PIN_MOTOR_B 10
 #define PIN_MOTOR_C 13

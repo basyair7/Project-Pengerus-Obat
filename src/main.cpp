@@ -13,6 +13,7 @@
 #include <menu.hpp>
 #include <standby.hpp>
 #include <handleMotors>
+#include <relaycontroller.h>
 
 // Initialize the global object
 LCDdisplay* lcd = new LCDdisplay;
@@ -21,6 +22,7 @@ SDCard sdcard;
 
 StandByProgram standby;
 HandleMotors handleMotors;
+relaycontroller relay(PIN_RELAY);
 Menu menu;
 Info info;
 byte num_menu;
@@ -47,6 +49,7 @@ private:
         // put your setup code here, to run once:
         TSbegin(115200);  // Initialize Serial Baudrate
         rtc.begin();      // Initialize rtc
+        relay.init();     // Initialize relay
         // rtc.autoAdjust(); // RTC time adjustment
         lcd->init();      // Initialize lcd
         sdcard.SDCardInit(); // Initialize sdcard

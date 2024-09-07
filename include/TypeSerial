@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef TYPESERIAL_HPP
 #define TYPESERIAL_HPP
 

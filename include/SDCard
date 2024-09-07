@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef SDCARD_HPP
 #define SDCARD_HPP
 

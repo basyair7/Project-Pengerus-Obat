@@ -3,7 +3,7 @@
 */
 
 #include <SDCard>
-#include <relaycontroller>
+#include <relaycontroller.h>
 #include <main.h>
 #include <variable.h>
 #include <LiquidCrystal_animated.h>

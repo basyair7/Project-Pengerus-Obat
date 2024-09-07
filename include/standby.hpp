@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef STANDBY_HPP
 #define STANDBY_HPP
 

@@ -2,7 +2,7 @@
  * @version 1.0.0
 */
 
-#include <relaycontroller>
+#include <relaycontroller.h>
 
 relaycontroller::relaycontroller(uint8_t pinRelay) {
     _pinRelay = pinRelay;

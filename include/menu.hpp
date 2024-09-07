@@ -2,6 +2,8 @@
  * @version 1.0.0
 */
 
+#pragma once
+
 #ifndef MENU_HPP
 #define MENU_HPP
 
