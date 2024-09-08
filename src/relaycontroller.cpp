@@ -2,6 +2,7 @@
  * @version 1.0.0
 */
 
+#include <Arduino.h>
 #include <relaycontroller.h>
 
 relaycontroller::relaycontroller(uint8_t pinRelay) {

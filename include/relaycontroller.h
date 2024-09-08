@@ -4,11 +4,10 @@
 
 #pragma once
 
-#include <Arduino.h>
 #include <variable.h>
 
-#define ON  LOW
-#define OFF HIGH
+#define ON  0x0
+#define OFF 0x1
 
 class relaycontroller : protected VariableMillis {
 public:
