@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef MAIN_H
-#define MAIN_H
-
 #include <Arduino.h>
 #include "LCDdisplay"
 #include "DS3231rtc"
@@ -16,5 +13,3 @@ extern LCDdisplay* lcd;
 extern DS3231rtc rtc;
 extern SDCard sdcard;
 extern byte num_menu;
-
-#endif

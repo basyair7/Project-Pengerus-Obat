@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef SDCARD_HPP
-#define SDCARD_HPP
-
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <SD.h>
@@ -39,5 +36,3 @@ private:
     String fileState  = "STATE.TXT";
     String fileReport = "REPORT.TXT";
 };
-
-#endif

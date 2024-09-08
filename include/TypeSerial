@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef TYPESERIAL_HPP
-#define TYPESERIAL_HPP
-
 #include <Arduino.h>
 
 extern "C" {
@@ -16,5 +13,3 @@ extern "C" {
     #define TSprintln Serial.println
     #define TSwrite Serial.write
 }
-
-#endif

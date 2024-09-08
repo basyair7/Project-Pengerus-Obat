@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef MOTOR_HPP
-#define MOTOR_HPP
-
 #include <Arduino.h>
 #include <DSXLite.h>
 
@@ -23,5 +20,3 @@ private:
     // Pointer for motor control
     DSX_pinMotors* driver;
 };
-
-#endif

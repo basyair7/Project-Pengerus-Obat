@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef MENU_HPP
-#define MENU_HPP
-
 #include <Arduino.h>
 #include "variable.h"
 #include "LCDdisplay"
@@ -25,5 +22,3 @@ private:
     uint8_t sizeListMenu;
     Keypad _keyMenu = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 };
-
-#endif

@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef HANDLEMOTORS_HPP
-#define HANDLEMOTORS_HPP
-
 #include <Arduino.h>
 #include <RTClib.h>
 #include <LiquidCrystal_animated.h>
@@ -49,5 +46,3 @@ private:
     bool running = false; // flag whether the program is running or not
     RTC_DS3231 _rtc; // RTC object
 };
-
-#endif // HANDLEMOTORS_HPP

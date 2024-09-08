@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef INFO_HPP
-#define INFO_HPP
-
 #include <Arduino.h>
 #include <Keypad.h>
 #include "main.h"
@@ -57,5 +54,3 @@ private:
 private:
     Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS); // キーパッド
 };
-
-#endif

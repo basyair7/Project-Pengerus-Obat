@@ -4,11 +4,6 @@
 
 #pragma once
 
-#ifndef VARIABLE_H
-#define VARIABLE_H
-
-#include <Arduino.h>
-
 // 定義と定数
 #define pinCS 53
 
@@ -40,5 +35,3 @@ public:
     unsigned long LastMillis1; // 最後のミリ秒1
     unsigned long LastMillis2; // 最後のミリ秒2
 };
-
-#endif

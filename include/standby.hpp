@@ -4,9 +4,6 @@
 
 #pragma once
 
-#ifndef STANDBY_HPP
-#define STANDBY_HPP
-
 #include <Arduino.h>
 #include <Keypad.h>
 #include "main.h"
@@ -59,5 +56,3 @@ public:
 private:
     Keypad _key = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 };
-
-#endif
