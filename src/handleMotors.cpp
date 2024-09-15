@@ -10,21 +10,21 @@ bool HandleMotors::insertSpeedMotors() {
     lcd->clear();
     speedSelect = 0;
     _speed_motors = list_speed_motors[speedSelect];
-    lcd->print("Select speed: ", 0, 0);
-    lcd->print(key_lable[speedSelect], 0, 1); // current speed display
+    lcd->printWithCursor<String>("Select speed: ", 0, 0);
+    lcd->printWithCursor<String>(key_lable[speedSelect], 0, 1); // current speed display
     delay(100);
 
     while (true) {
         char _key = keypad.getKey();
         if (_key) {
             lcd->clear();
-            lcd->print("Select speed: ", 0, 0); // Redisplay of speed input
+            lcd->printWithCursor<String>("Select speed: ", 0, 0); // Redisplay of speed input
 
             for (uint8_t i = 0; i < sizeListSpeed; i++) {
                 if (_key == key_map[i]) {
                     speedSelect = i;
                     _speed_motors = list_speed_motors[speedSelect];
-                    lcd->print(key_lable[speedSelect], 0, 1); // show speed options
+                    lcd->printWithCursor<String>(key_lable[speedSelect], 0, 1); // show speed options
                 }
             }
 
@@ -37,7 +37,7 @@ bool HandleMotors::insertSpeedMotors() {
                 return false;
             }
             else {
-                lcd->print(key_lable[speedSelect], 0, 1); // show speed options
+                lcd->printWithCursor<String>(key_lable[speedSelect], 0, 1); // show speed options
             }
         }
     }
@@ -46,7 +46,7 @@ bool HandleMotors::insertSpeedMotors() {
 // duration entry function
 bool HandleMotors::insertDurations() {
     lcd->clear();
-    lcd->print("Insert duration: ", 0, 0); // display of duration input
+    lcd->printWithCursor("Insert duration: ", 0, 0); // display of duration input
     String inputDuration = ""; // saving user input
 
     while (true) {
@@ -60,13 +60,13 @@ bool HandleMotors::insertDurations() {
             } else if (_key == 'D') { // delete input button
                 inputDuration = ""; // delete accommodated data
                 lcd->clear();
-                lcd->print("Insert duration: ", 0, 0);
+                lcd->printWithCursor("Insert duration: ", 0, 0);
             } else if (isDigit(_key)) {
                 inputDuration += _key; // add numbers to input
                 lcd->clear();
                 // show current input
-                lcd->print("Insert duration: ", 0, 0);
-                lcd->print(inputDuration + " s", 0, 1); 
+                lcd->printWithCursor("Insert duration: ", 0, 0);
+                lcd->printWithCursor(inputDuration + " s", 0, 1); 
             }
             else if (_key == 'B') {
                 return false;
@@ -85,16 +85,16 @@ bool HandleMotors::init() {
     restoreStateFromSDCard();
     if (running && remainingSecs > 0) {
         lcd->clear();
-        // lcd->print("Resuming this program?", 0, 0);
+        // lcd->printWithCursor("Resuming this program?", 0, 0);
         String top_str = "Resuming this program?";
         char key;
-        lcd->print("*: yes, #: no", 0, 1);
+        lcd->printWithCursor("*: yes, #: no", 0, 1);
 
         while (true) {
             for (int i = 0; i < (int)(top_str.length() + 16); i++) {
                 key = keypad.getKey();
                 if (key) break;
-                lcd->print(runningText.Scroll_LCD_Left(top_str), 0, 0);
+                lcd->printWithCursor(runningText.Scroll_LCD_Left(top_str), 0, 0);
                 delay(200);
             }
 
@@ -161,21 +161,21 @@ void HandleMotors::run() {
                     if (state >= 0 && state <= 5) {
                         // countdown time display
                         if (remainingSecs > 0) {
-                            lcd->print("Remaining time: ", 0, 0);
+                            lcd->printWithCursor("Remaining time: ", 0, 0);
                             int hours   = remainingSecs / 3600;
                             int minutes = (remainingSecs % 3600) / 60;
                             int seconds = remainingSecs % 60;
                             remainingTime = String(hours) + ":" + 
                                             (minutes < 10 ? "0" : "") + String(minutes) + ":" + 
                                             (seconds < 10 ? "0" : "") + String(seconds);
-                            lcd->print(remainingTime, 0, 1);
+                            lcd->printWithCursor(remainingTime, 0, 1);
                         }
                     }
 
                     if (state >= 5 && state <= 10) {
                         String lblSpeed = key_lable[speedSelect] + " (" + String(pwmPercentage) + " %)  ";
-                        lcd->print(lblSpeed, 0, 0);
-                        lcd->print("Finish at: " + formatFinishTime, 0, 1);
+                        lcd->printWithCursor(lblSpeed, 0, 0);
+                        lcd->printWithCursor("Finish at: " + formatFinishTime, 0, 1);
                     }
                     state++;
                     if (state > 10) state = 0;
@@ -196,8 +196,8 @@ void HandleMotors::run() {
                 driver.stops();
                 relay.write(relayState, 1000);
                 lcd->clear();
-                lcd->print("Pause program...", 0, 0);
-                lcd->print("A:Stop C:Resume", 0, 1);
+                lcd->printWithCursor("Pause program...", 0, 0);
+                lcd->printWithCursor("A:Stop C:Resume", 0, 1);
                 pausedAt = millis();
                 paused = true;
 
@@ -205,7 +205,7 @@ void HandleMotors::run() {
                     char confirmKey = keypad.getKey();
                     if (confirmKey == 'A') {
                         lcd->clear();
-                        lcd->print("Stopped.", 0, 0);
+                        lcd->printWithCursor("Stopped.", 0, 0);
                         delay(2000);
                         stop_program = true;
                         finishTimeStr = formatFinishTime + " (" + String(durations) + " seconds)\n";
@@ -217,7 +217,7 @@ void HandleMotors::run() {
                     } 
                     else if (confirmKey == 'C') {
                         lcd->clear();
-                        lcd->print("Resuming...", 0, 0);
+                        lcd->printWithCursor("Resuming...", 0, 0);
                         delay(2000);
                         finishTime = _rtc.now() + TimeSpan(remainingSecs);
                         formatFinishTime = finishTime.toString("hh:mm:ss"); // reformat the end time
@@ -235,10 +235,10 @@ void HandleMotors::run() {
         driver.stops(); // motor stops
 
         lcd->clear();
-        lcd->print("Finished! ", 0, 0);
+        lcd->printWithCursor("Finished! ", 0, 0);
         delay(2000);
-        lcd->print(formatFinishTime + "(" + String(durations) + "s)", 0, 0);
-        lcd->print("Speed: " + key_lable[speedSelect], 0, 1); // result display
+        lcd->printWithCursor(formatFinishTime + "(" + String(durations) + "s)", 0, 0);
+        lcd->printWithCursor("Speed: " + key_lable[speedSelect], 0, 1); // result display
 
         // save report
         if (!stop_program) {

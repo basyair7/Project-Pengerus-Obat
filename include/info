@@ -28,16 +28,16 @@ public:
             if((unsigned long) (millis() - LastMillis2) >= 500) {
                 LastMillis2 = millis();
                 lcd->clear();
-                lcd->print("Information", 2, 0); // 情報タイトルの表示
+                lcd->printWithCursor("Information", 2, 0); // 情報タイトルの表示
                 
                 if(stateinfo == 0) {
-                    lcd->print("Firmware: " + firmwareVer, 0, 1); // ファームウェアバージョンの表示
+                    lcd->printWithCursor("Firmware: " + firmwareVer, 0, 1); // ファームウェアバージョンの表示
                 }
                 else if(stateinfo == 1) {
-                    lcd->print("Build: " + buildDate, 0, 1); // ビルド日の表示
+                    lcd->printWithCursor("Build: " + buildDate, 0, 1); // ビルド日の表示
                 }
                 else if(stateinfo == 2) {
-                    lcd->print("Board:" + boardChipset, 0, 1); // ボードチップセットの表示
+                    lcd->printWithCursor("Board:" + boardChipset, 0, 1); // ボードチップセットの表示
                 }
             }
 

@@ -14,13 +14,37 @@ public:
         cols(cols), rows(rows), lcd(0x27, cols, rows) {}
         
     // Initialize LCD function
-    void init();
+    void init() {
+        lcd.init();
+        lcd.backlight();
+        lcd.clear();
+    }
+
     // Clear LCD function
-    void clear();
+    void clear() {
+        lcd.clear();
+    }
+
     // backlight on/off
-    void backlight(bool x);
+    void backlight(bool x) {
+        if (x) lcd.backlight();
+        else lcd.noBacklight();
+    }
+
+    // setCursor LCD display
+    void setCursor(const uint8_t col, const uint8_t row) {
+        lcd.setCursor(col, row);
+    }
+
     // string display
-    void print(const String& x, const uint8_t col, const uint8_t row);
+    template <typename T> void print(const T& x) {
+        lcd.print(x);
+    }
+    template <typename T> void printWithCursor(const T& x, const uint8_t col, const uint8_t row)
+    {
+        lcd.setCursor(col, row);
+        lcd.print(x);
+    }
 
 public:
     int cols = 16, rows = 2;

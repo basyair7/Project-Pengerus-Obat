@@ -11,10 +11,10 @@
 void SDCard::SDCardInit() {
     LiquidCrystal_animated runningText;
     TSprintln("Initializing SD Card...");
-    lcd->print("Information:", 0, 0);
+    lcd->printWithCursor("Information:", 0, 0);
     // display SDCard initialization message
     for (byte i = 0; i <= 39; i++) {
-        lcd->print(runningText.Scroll_LCD_Left("Initializing SD Card..."), 0, 1);
+        lcd->printWithCursor(runningText.Scroll_LCD_Left("Initializing SD Card..."), 0, 1);
         delay(150);
     }
     runningText.Clear_Scroll_LCD_Left();
@@ -34,7 +34,7 @@ void SDCard::SDCardInit() {
                     return;
                 }
 
-                lcd->print(
+                lcd->printWithCursor(
                     runningText.Scroll_LCD_Left(
                         "Initializing SD Card failed! Please insert SD Card"
                     ), 0, 1
@@ -46,8 +46,8 @@ void SDCard::SDCardInit() {
             // display a message if initialization successful
             TSprintln("Done... Welcome");
             lcd->clear();
-            lcd->print("Done", 0, 0);
-            lcd->print("Welcome...", 0, 1);
+            lcd->printWithCursor("Done", 0, 0);
+            lcd->printWithCursor("Welcome...", 0, 1);
             delay(500);
             runningText.Clear_Scroll_LCD_Left();
             lcd->clear();
@@ -147,10 +147,10 @@ void SDCard::writeReport(String date, String time, String finishTime, String spe
         TSprint(fileReport);
         TSprintln(" for writing");
         lcd->clear();
-        lcd->print("Information: ", 0, 0);
+        lcd->printWithCursor("Information: ", 0, 0);
         String info_str = "Failed to save " + fileReport;
         for (int i = 0; i < (int)(info_str.length()) + 16; i++) {
-            lcd->print(
+            lcd->printWithCursor(
                 runningText.Scroll_LCD_Left(info_str), 0, 1
             );
 

@@ -28,8 +28,12 @@ public:
                 TSprintln("Date: " + rtc.datestr());
                 TSprintln("Time: " + rtc.timestr());
                 lcd->clear();
-                lcd->print("Date: " + rtc.datestr(), 0, 0);
-                lcd->print("Time: " + rtc.timestr(), 0, 1);
+                lcd->setCursor(0, 0);
+                lcd->print(F("Date: "));
+                lcd->print(rtc.datestr());
+                lcd->setCursor(0, 1);
+                lcd->print(F("Time: "));
+                lcd->print(rtc.timestr());
 
                 // 10秒経過後、バックライトを消灯
                 if (i >= 180) lcd->backlight(false);

@@ -18,15 +18,15 @@ void Menu::menu() {
     };
     
     // display the first menu before the loop starts
-    lcd->print(F("===== Menu ====="), 0, 0);
-    lcd->print(option_menu[0], 0, 1);
+    lcd->printWithCursor(F("===== Menu ====="), 0, 0);
+    lcd->printWithCursor(option_menu[0], 0, 1);
     int x = 1;
 
     while (true) {
         char _key_btn = _keyMenu.getKey();
         if (_key_btn) {
             lcd->clear();
-            lcd->print("===== Menu =====", 0, 0);
+            lcd->printWithCursor("===== Menu =====", 0, 0);
 
             if (_key_btn == 'A' && x != 0) {
                 lcd->clear();
@@ -37,14 +37,14 @@ void Menu::menu() {
             bool validKey = false;
             for (uint8_t i = 0; i < sizeListMenu; i++) {
                 if (_key_btn == key_map[i]) {
-                    lcd->print(option_menu[i], 0, 1);
+                    lcd->printWithCursor(option_menu[i], 0, 1);
                     x = i + 1;
                     validKey = true;
                 }
             }
 
             if (!validKey) {
-                lcd->print(option_menu[0], 0, 1);
+                lcd->printWithCursor(option_menu[0], 0, 1);
                 x = 1;
             }
         }
